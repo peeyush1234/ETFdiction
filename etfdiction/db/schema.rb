@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150510162927) do
+ActiveRecord::Schema.define(version: 20150510224327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,10 @@ ActiveRecord::Schema.define(version: 20150510162927) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                      null: false
+    t.decimal  "ma_200"
+    t.decimal  "rsi_14"
+    t.decimal  "avg_gain_14"
+    t.decimal  "avg_loss_14"
   end
 
   add_index "etfs", ["name", "date"], name: "primary_key_idx", unique: true, using: :btree
