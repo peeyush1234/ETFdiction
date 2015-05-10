@@ -1,6 +1,6 @@
 logfile
 .DS_Store
-.idea
+.idea/
 /**/*.iml
 .idea/*
 .ruby-version

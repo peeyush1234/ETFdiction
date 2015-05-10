@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150510060018) do
+ActiveRecord::Schema.define(version: 20150510162927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "etfs", id: false, force: :cascade do |t|
     t.string   "name",         limit: 255,                          null: false
-    t.datetime "trading_date",                                      null: false
+    t.string   "date",         limit: 255,                          null: false
     t.decimal  "open",                     precision: 20, scale: 2, null: false
     t.decimal  "close",                    precision: 20, scale: 2, null: false
     t.decimal  "high",                     precision: 20, scale: 2, null: false
@@ -29,6 +29,6 @@ ActiveRecord::Schema.define(version: 20150510060018) do
     t.integer  "lock_version",                                      null: false
   end
 
-  add_index "etfs", ["name", "trading_date"], name: "primary_key_idx", unique: true, using: :btree
+  add_index "etfs", ["name", "date"], name: "primary_key_idx", unique: true, using: :btree
 
 end
