@@ -6,11 +6,13 @@ class Etf < ActiveRecord::Base
   validates :high, presence: true
   validates :low, presence: true
 
-  ETF_3X = ['BAR',	'BRZU',	'BUNT',	'CURE',	'DGAZ',	'DGLD',	'DPK',	'DRN',	'DRV',	'DSLV',	'DUST',	'DWTI',	'DZK',	'EDC',	'EDZ',	'ERX',	'ERY',	'EURL',	'FAS',	'FAZ',	'FINU',	'FINZ',	'GASL',	'INDL',	'JDST',	'JGBD',	'JGBT',	'JNUG',	'JPNL',	'LBJ',	'LBND',	'MATL',	'MIDU',	'MIDZ',	'NUGT',	'RETL',	'RUSL',	'RUSS',	'SBND',	'SDOW',	'SMDD',	'SOXL',	'SOXS',	'SPXL',	'SPXS',	'SPXU',	'SQQQ',	'SRTY',	'TECL',	'TECS',	'TMF',	'TMV',	'TNA',	'TQQQ',	'TTT',	'TYD',	'TYO',	'TZA',	'UDOW',	'UGAZ',	'UGLD',	'UMDD',	'UPRO',	'URTY',	'USLV',	'UWTI',	'YANG',	'YINN'].freeze
+  ETF_3X_BULL = {name: "etf_3x_bull", values: ['BAR',	'BRZU',	'BUNT',	'CURE',	'DRN',	'DZK',	'EDC',	'ERX',	'EURL',	'FAS',	'FINU',	'GASL',	'INDL',	'JDST',	'JGBT',	'JNUG',	'JPNL',	'LBJ',	'MATL',	'MIDU',	'NUGT',	'RETL',	'RUSL',	'SOXL',	'SPXL',	'TECL',	'TMF',	'TNA',	'TQQQ',	'TYD',	'UDOW',	'UGAZ',	'UGLD',	'UMDD',	'UPRO',	'URTY',	'USLV',	'UWTI',	'YINN']}.freeze
 
-  ETF_2X = ['AGA',	'AGQ',	'BDCL',	'BDD',	'BIB',	'BIS',	'BOIL',	'BOM',	'BZQ',	'CEFL',	'CMD',	'CROC',	'DAG',	'DDM',	'DEE',	'DGP',	'DGZ',	'DIG',	'DRR',	'DTO',	'DUG',	'DVHL',	'DVYL',	'DXD',	'DYY',	'DZZ',	'EET',	'EEV',	'EFO',	'EFU',	'EPV',	'EUO',	'EWV',	'EZJ',	'FXP',	'GDAY',	'GLL',	'IGU',	'KOLD',	'KRU',	'LMLP',	'LTL',	'MLPL',	'MORL',	'MVV',	'MZZ',	'PST',	'QID',	'QLD',	'REW',	'ROM',	'RWXL',	'RXD',	'RXL',	'SAA',	'SCC',	'SCIN',	'SCO',	'SDD',	'SDP',	'SDS',	'SDYL',	'SIJ',	'SKF',	'SMHD',	'SMK',	'SMN',	'SPLX',	'SRS',	'SSG',	'SSO',	'SZK',	'TBT',	'TBZ',	'THHY',	'TLL',	'TPS',	'TVIX',	'TWM',	'UBR',	'UBT',	'UCC',	'UCD',	'UCO',	'UGE',	'UGL',	'UJB',	'ULE',	'UMX',	'UPV',	'UPW',	'URE',	'URR',	'USD',	'UST',	'UVXY',	'UWM',	'UXI',	'UXJ',	'UYG',	'UYM',	'XPP',	'YCL',	'YCS',	'ZSL'].freeze
+  ETF_3X_BEAR = {name: "etf_3x_bear", values: ['DGAZ',	'DGLD',	'DPK',	'DRV',	'DSLV',	'DUST',	'DWTI',	'EDZ',	'ERY',	'FAZ',	'FINZ',	'JGBD',	'LBND',	'MIDZ',	'RUSS',	'SBND',	'SDOW',	'SMDD',	'SOXS',	'SPXS',	'SPXU',	'SQQQ',	'SRTY',	'TECS',	'TMV',	'TTT',	'TYO',	'TZA',	'YANG']}.freeze
 
-  ETF_1X =
+  ETF_2X_BULL = {name: "etf_2x_bull", values: ['AGQ',	'BDCL',	'BDD',	'BIB',	'BOIL',	'CEFL',	'DAG',	'DDM',	'DGP',	'DIG',	'DVHL',	'DVYL',	'DYY',	'EET',	'EFO',	'EZJ',	'GDAY',	'IGU',	'KRU',	'LMLP',	'LTL',	'MLPL',	'MORL',	'MVV',	'QLD',	'ROM',	'RWXL',	'RXL',	'SAA',	'SDYL',	'SMHD',	'SPLX',	'SSO',	'THHY',	'TVIX',	'UBR',	'UBT',	'UCC',	'UCD',	'UCO',	'UGE',	'UGL',	'UJB',	'ULE',	'UMX',	'UPV',	'UPW',	'URE',	'URR',	'USD',	'UST',	'UVXY',	'UWM',	'UXI',	'UXJ',	'UYG',	'UYM',	'XPP',	'YCL']}.freeze
+
+  ETF_2X_BEAR = {name: "etf_2x_bear", values: ['AGA',	'BIS',	'BOM',	'BZQ',	'CMD',	'CROC',	'DEE',	'DGZ',	'DRR',	'DTO',	'DUG',	'DXD',	'DZZ',	'EEV',	'EFU',	'EPV',	'EUO',	'EWV',	'FXP',	'GLL',	'KOLD',	'MZZ',	'PST',	'QID',	'REW',	'RXD',	'SCC',	'SCIN',	'SCO',	'SDD',	'SDP',	'SDS',	'SIJ',	'SKF',	'SMK',	'SMN',	'SRS',	'SSG',	'SZK',	'TBT',	'TBZ',	'TLL',	'TPS',	'TWM',	'YCS',	'ZSL']}.freeze
 
   def rsi(period)
     records_close = Etf.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period+1).pluck(:close)
@@ -28,19 +30,13 @@ class Etf < ActiveRecord::Base
   end
 
   def self.day_3_high_low_etfs
-    today = Date.today.to_s
-
-    result_3x = []
-    ETF_3X.each do |etf_name|
-      result_3x << etf_name if day_3_high_low?(etf_name)
+    result = Hash.new{ |h, k| h[k] = [] }
+    [ETF_3X_BULL, ETF_3X_BEAR, ETF_2X_BULL, ETF_2X_BEAR].each do |etfs_hash|
+      etfs_hash[:values].each do |etf_name|
+        result[etfs_hash[:name]] << etf_name if day_3_high_low?(etf_name)
+      end
     end
-
-    result_2x = []
-    ETF_2X.each do |etf_name|
-      result_2x << etf_name if day_3_high_low?(etf_name)
-    end
-
-    {etf_3x: result_3x, etf_2x: result_2x}
+    result
   end
 
   private
@@ -48,9 +44,12 @@ class Etf < ActiveRecord::Base
   def self.day_3_high_low?(etf_name)
     today = Date.today.to_s
     etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
-    sma_200 = etfs.last.sma(200)
 
-    return true if etfs.all? {|etf| etf.close > sma_200} && ((etfs[1].high < etfs[0].high) && (etfs[2].high < etfs[1].high)) && ((etfs[1].low < etfs[0].low) && (etfs[2].low < etfs[1].low))
+    #sma_200 = etfs.last.sma(200)
+    #return false if sma_200.blank?
+    #return false unless etfs.all? {|etf| etf.close > sma_200}
+
+    return true if ((etfs[1].high < etfs[0].high) && (etfs[2].high < etfs[1].high)) && ((etfs[1].low < etfs[0].low) && (etfs[2].low < etfs[1].low))
 
     return false
   end

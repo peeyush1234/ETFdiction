@@ -3,7 +3,7 @@ require 'csv'
 module DataFetcher
 
   def self.update_data
-    etf_list = Etf::ETF_2X + Etf::ETF_3X
+    etf_list = Etf::ETF_2X_BULL[:values] + Etf::ETF_3X_BULL[:values] + Etf::ETF_2X_BEAR[:values] + Etf::ETF_3X_BEAR[:values]
     etf_list.each do |etf_name|
       records = csv_data_from_yahoo(etf_name)
       last_trading_date = Etf.where(name: etf_name).order(date: :desc).limit(1).pluck(:date).to_a.first
