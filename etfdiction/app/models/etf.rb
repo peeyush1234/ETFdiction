@@ -14,6 +14,8 @@ class Etf < ActiveRecord::Base
 
   ETF_2X_BEAR = {name: "etf_2x_bear", values: ['AGA',	'BIS',	'BOM',	'BZQ',	'CMD',	'CROC',	'DEE',	'DGZ',	'DRR',	'DTO',	'DUG',	'DXD',	'DZZ',	'EEV',	'EFU',	'EPV',	'EUO',	'EWV',	'FXP',	'GLL',	'KOLD',	'MZZ',	'PST',	'QID',	'REW',	'RXD',	'SCC',	'SCIN',	'SCO',	'SDD',	'SDP',	'SDS',	'SIJ',	'SKF',	'SMK',	'SMN',	'SRS',	'SSG',	'SZK',	'TBT',	'TBZ',	'TLL',	'TPS',	'TWM',	'YCS',	'ZSL']}.freeze
 
+  ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
+
   def rsi(period)
     records_close = Etf.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period+1).pluck(:close)
     return nil if records_close.count < period + 1
@@ -29,9 +31,20 @@ class Etf < ActiveRecord::Base
     (records_close.sum/period.to_f).to_f.round(2)
   end
 
+  def self.rsi_25_etfs
+    result = Hash.new{ |h, k| h[k] = [] }
+    [ETF_BULL].each do |etfs_hash|
+      etfs_hash[:values].each do |etf_name|
+        result[etfs_hash[:name]] << etf_name if below_rsi_25?(etf_name)
+      end
+    end
+    result
+  end
+
   def self.day_3_high_low_etfs
     result = Hash.new{ |h, k| h[k] = [] }
-    [ETF_3X_BULL, ETF_3X_BEAR, ETF_2X_BULL, ETF_2X_BEAR].each do |etfs_hash|
+    #[ETF_3X_BULL, ETF_3X_BEAR, ETF_2X_BULL, ETF_2X_BEAR].each do |etfs_hash|
+    [ETF_BULL].each do |etfs_hash|
       etfs_hash[:values].each do |etf_name|
         result[etfs_hash[:name]] << etf_name if day_3_high_low?(etf_name)
       end
@@ -39,15 +52,45 @@ class Etf < ActiveRecord::Base
     result
   end
 
+  def self.sma_above_200_etfs
+    result = Hash.new{ |h, k| h[k] = [] }
+
+    [ETF_BULL].each do |etfs_hash|
+      etfs_hash[:values].each do |etf_name|
+        result[etfs_hash[:name]] << etf_name if sma_above_200?(etf_name)
+      end
+    end
+
+    result
+  end
+
   private
 
+  def self.below_rsi_25?(etf_name)
+    etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(2).reverse
+    sma_200 = etfs.last.sma(200)
+    return false unless etfs.all? {|etf| etf.close > sma_200}
+
+    puts etfs.last.rsi(4)
+    return true if ((etfs.last.rsi(4).round <= 25))
+  end
+
+  def self.today
+    Date.today.to_s
+  end
+
+  def self.sma_above_200?(etf_name)
+    etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
+    sma_200 = etfs.last.sma(200)
+    return false unless etfs.all? {|etf| etf.close > sma_200}
+    true
+  end
+
   def self.day_3_high_low?(etf_name)
-    today = Date.today.to_s
     etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
 
-    #sma_200 = etfs.last.sma(200)
-    #return false if sma_200.blank?
-    #return false unless etfs.all? {|etf| etf.close > sma_200}
+    sma_200 = etfs.last.sma(200)
+    return false unless etfs.all? {|etf| etf.close > sma_200}
 
     return true if ((etfs[1].high < etfs[0].high) && (etfs[2].high < etfs[1].high)) && ((etfs[1].low < etfs[0].low) && (etfs[2].low < etfs[1].low))
 
