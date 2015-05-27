@@ -5,3 +5,4 @@ logfile
 .idea/*
 .ruby-version
 log/*
+/config/database.yml
