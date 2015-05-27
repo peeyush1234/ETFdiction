@@ -40,7 +40,3 @@ module DataFetcher
     end
   end
 end
-
-#DataFetcher.update_data
-#postgres -D /usr/local/var/postgres/ -h 127.0.0.1 -p 55432
-#psql -d etfdiction_development -h 127.0.0.1 -p 5432

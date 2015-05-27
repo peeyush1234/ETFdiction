@@ -87,6 +87,7 @@ class Etf < ActiveRecord::Base
   end
 
   def self.day_3_high_low?(etf_name)
+
     etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
 
     sma_200 = etfs.last.sma(200)
