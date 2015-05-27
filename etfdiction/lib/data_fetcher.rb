@@ -4,6 +4,7 @@ module DataFetcher
 
   def self.update_data
     #etf_list = Etf::ETF_2X_BULL[:values] + Etf::ETF_3X_BULL[:values] + Etf::ETF_2X_BEAR[:values] + Etf::ETF_3X_BEAR[:values] + ETF::ETF_BULL[:values]
+
     etf_list = Etf::ETF_BULL[:values]
     etf_list.each do |etf_name|
       records = csv_data_from_yahoo(etf_name)
