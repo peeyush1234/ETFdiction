@@ -20,6 +20,15 @@ module DataFetcher
     end
   end
 
+  def self.realtime_price(etf)
+    # Documentation: http://m.blog.csdn.net/blog/solaris_navi/6730464
+    url = "http://finance.google.com/finance/info?client=ig&q=#{etf}"
+    data = Manticore.get(url).body
+    current_price = JSON.parse(data.split("//").second).first['l'].to_f
+
+    current_price
+  end
+
   private
 
   def self.create_record(etf_name, rec, records)

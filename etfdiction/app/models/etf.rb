@@ -17,20 +17,25 @@ class Etf < ActiveRecord::Base
   ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
   def rsi(period)
-    records_close = Etf.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period+1).pluck(:close)
+    records_close = Etf.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period+1).pluck(:close)
     return nil if records_close.count < period + 1
     data_setup = Indicators::Data.new(records_close.reverse)
     data_setup.calc(type: :rsi, params: period).output.last.round(2)
   end
 
   def sma(period)
-    records_close = Etf.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period).pluck(:close)
+    records_close = Etf.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period).pluck(:close)
 
     return nil if records_close.count < period
 
     (records_close.sum/period.to_f).to_f.round(2)
   end
 
+  def current_price
+    DataFetcher.realtime_price(name)
+  end
+
+  # Chapter 3
   def self.rsi_25_etfs
     result = Hash.new{ |h, k| h[k] = [] }
     [ETF_BULL].each do |etfs_hash|
@@ -41,9 +46,9 @@ class Etf < ActiveRecord::Base
     result
   end
 
+  # Chapter 2
   def self.day_3_high_low_etfs
     result = Hash.new{ |h, k| h[k] = [] }
-    #[ETF_3X_BULL, ETF_3X_BEAR, ETF_2X_BULL, ETF_2X_BEAR].each do |etfs_hash|
     [ETF_BULL].each do |etfs_hash|
       etfs_hash[:values].each do |etf_name|
         result[etfs_hash[:name]] << etf_name if day_3_high_low?(etf_name)
