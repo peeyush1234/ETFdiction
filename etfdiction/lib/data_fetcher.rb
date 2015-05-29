@@ -3,12 +3,12 @@ require 'csv'
 module DataFetcher
 
   def self.update_data
-    #etf_list = Etf::ETF_2X_BULL[:values] + Etf::ETF_3X_BULL[:values] + Etf::ETF_2X_BEAR[:values] + Etf::ETF_3X_BEAR[:values] + ETF::ETF_BULL[:values]
+    #etf_list = EtfPrice::ETF_2X_BULL[:values] + EtfPrice::ETF_3X_BULL[:values] + EtfPrice::ETF_2X_BEAR[:values] + EtfPrice::ETF_3X_BEAR[:values] + ETF::ETF_BULL[:values]
 
-    etf_list = Etf::ETF_BULL[:values]
+    etf_list = EtfPrice::ETF_BULL[:values]
     etf_list.each do |etf_name|
       records = csv_data_from_yahoo(etf_name)
-      last_trading_date = Etf.where(name: etf_name).order(date: :desc).limit(1).pluck(:date).to_a.first
+      last_trading_date = EtfPrice.where(name: etf_name).order(date: :desc).limit(1).pluck(:date).to_a.first
 
       if last_trading_date.present?
         records.each do |rec|
@@ -32,7 +32,7 @@ module DataFetcher
   private
 
   def self.create_record(etf_name, rec, records)
-    Etf.new(name: etf_name, date: rec[:date], open: rec[:open], close: rec[:close], high: rec[:high], low: rec[:low], volume: rec[:volume]).save!
+    EtfPrice.new(name: etf_name, date: rec[:date], open: rec[:open], close: rec[:close], high: rec[:high], low: rec[:low], volume: rec[:volume]).save!
   end
 
   def self.csv_data_from_yahoo(sym)

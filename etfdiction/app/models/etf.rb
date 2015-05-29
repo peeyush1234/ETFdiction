@@ -1,10 +1,4 @@
-class Etf < ActiveRecord::Base
-  validates :name, presence: true
-  validates :date, presence: true
-  validates :open, presence: true
-  validates :close, presence: true
-  validates :high, presence: true
-  validates :low, presence: true
+class Etf
 
   ETF_3X_BULL = {name: "etf_3x_bull", values: ['BAR',	'BRZU',	'BUNT',	'CURE',	'DRN',	'DZK',	'EDC',	'ERX',	'EURL',	'FAS',	'FINU',	'GASL',	'INDL',	'JDST',	'JGBT',	'JNUG',	'JPNL',	'LBJ',	'MATL',	'MIDU',	'NUGT',	'RETL',	'RUSL',	'SOXL',	'SPXL',	'TECL',	'TMF',	'TNA',	'TQQQ',	'TYD',	'UDOW',	'UGAZ',	'UGLD',	'UMDD',	'UPRO',	'URTY',	'USLV',	'UWTI',	'YINN']}.freeze
 
@@ -16,91 +10,45 @@ class Etf < ActiveRecord::Base
 
   ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
-  def rsi(period)
-    records_close = Etf.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period+1).pluck(:close)
-    return nil if records_close.count < period + 1
-    data_setup = Indicators::Data.new(records_close.reverse)
-    data_setup.calc(type: :rsi, params: period).output.last.round(2)
+  attr_accessor :name
+
+  def initialize(name)
+    self.name = name
   end
 
-  def sma(period)
-    records_close = Etf.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period).pluck(:close)
+  def current_sma(period)
+    if market_opened?
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(period-1).pluck(:close)
+      records_close.unshift(current_price)
+    else
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(period).pluck(:close)
+    end
 
     return nil if records_close.count < period
-
     (records_close.sum/period.to_f).to_f.round(2)
   end
+
+  def sma(period, date)
+    etf_price = EtfPrice.where(name: name).where(date: date).first
+    raise "Invalid date for the etf #{date}" if etf_price.blank?
+    etf_price.sma(period)
+  end
+
+  #TODO: Current RSI and rsi
 
   def current_price
     DataFetcher.realtime_price(name)
   end
 
-  # Chapter 3
-  def self.rsi_25_etfs
-    result = Hash.new{ |h, k| h[k] = [] }
-    [ETF_BULL].each do |etfs_hash|
-      etfs_hash[:values].each do |etf_name|
-        result[etfs_hash[:name]] << etf_name if below_rsi_25?(etf_name)
-      end
-    end
-    result
-  end
-
-  # Chapter 2
-  def self.day_3_high_low_etfs
-    result = Hash.new{ |h, k| h[k] = [] }
-    [ETF_BULL].each do |etfs_hash|
-      etfs_hash[:values].each do |etf_name|
-        result[etfs_hash[:name]] << etf_name if day_3_high_low?(etf_name)
-      end
-    end
-    result
-  end
-
-  def self.sma_above_200_etfs
-    result = Hash.new{ |h, k| h[k] = [] }
-
-    [ETF_BULL].each do |etfs_hash|
-      etfs_hash[:values].each do |etf_name|
-        result[etfs_hash[:name]] << etf_name if sma_above_200?(etf_name)
-      end
-    end
-
-    result
-  end
-
   private
 
-  def self.below_rsi_25?(etf_name)
-    etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(2).reverse
-    sma_200 = etfs.last.sma(200)
-    return false unless etfs.all? {|etf| etf.close > sma_200}
+  def market_opened?
+    t = Time.now
 
-    puts etfs.last.rsi(4)
-    return true if ((etfs.last.rsi(4).round <= 25))
+    # UTC
+    Range.new(
+      Time.local(t.year, t.month, t.day, 14, 30).to_i,
+      Time.local(t.year, t.month, t.day, 21).to_i
+    ) === t.to_i
   end
-
-  def self.today
-    Date.today.to_s
-  end
-
-  def self.sma_above_200?(etf_name)
-    etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
-    sma_200 = etfs.last.sma(200)
-    return false unless etfs.all? {|etf| etf.close > sma_200}
-    true
-  end
-
-  def self.day_3_high_low?(etf_name)
-
-    etfs = Etf.where(name: etf_name).where("date <= '#{today}'").order(date: :desc).limit(3).reverse
-
-    sma_200 = etfs.last.sma(200)
-    return false unless etfs.all? {|etf| etf.close > sma_200}
-
-    return true if ((etfs[1].high < etfs[0].high) && (etfs[2].high < etfs[1].high)) && ((etfs[1].low < etfs[0].low) && (etfs[2].low < etfs[1].low))
-
-    return false
-  end
-
 end
