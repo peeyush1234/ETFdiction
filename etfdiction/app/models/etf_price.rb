@@ -6,21 +6,6 @@ class EtfPrice < ActiveRecord::Base
   validates :high, presence: true
   validates :low, presence: true
 
-  def rsi(period)
-    records_close = EtfPrice.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period+1).pluck(:close)
-    return nil if records_close.count < period + 1
-    data_setup = Indicators::Data.new(records_close.reverse)
-    data_setup.calc(type: :rsi, params: period).output.last.round(2)
-  end
-
-  def sma(period)
-    records_close = EtfPrice.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period).pluck(:close)
-
-    return nil if records_close.count < period
-
-    (records_close.sum/period.to_f).to_f.round(2)
-  end
-
   # Chapter 4
   def self.r_3_etfs
     result = Hash.new{ |h, k| h[k] = [] }
