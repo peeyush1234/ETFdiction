@@ -39,6 +39,7 @@ class EtfPrice < ActiveRecord::Base
     result
   end
 
+  # TODO This thing belongs in some controller
   def self.sma_above_200_etfs
     result = Hash.new{ |h, k| h[k] = [] }
 
@@ -54,7 +55,7 @@ class EtfPrice < ActiveRecord::Base
   private
 
   def self.r_3(etf)
-    current_
+    # TODO: Complete me
   end
 
   def self.below_rsi_25?(etf_name)

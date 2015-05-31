@@ -24,9 +24,11 @@ module DataFetcher
     # Documentation: http://m.blog.csdn.net/blog/solaris_navi/6730464
     url = "http://finance.google.com/finance/info?client=ig&q=#{etf}"
     data = Manticore.get(url).body
-    current_price = JSON.parse(data.split("//").second).first['l'].to_f
+    parsed_data = JSON.parse(data.split("//").second).first
+    current_price = parsed_data['l'].to_f
+    current_date = Date.parse(parsed_data['lt_dts'].to_f)
 
-    current_price
+    {price: current_price, date: current_date}
   end
 
   private

@@ -17,34 +17,22 @@ class Etf
   end
 
   def current_sma(period)
-    if market_opened?
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(period-1).pluck(:close)
-      records_close.unshift(current_price)
-    else
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(period).pluck(:close)
-    end
-
+    records_close = get_records_close(period)
     return nil if records_close.count < period
+
     compute_sma(records_close)
   end
 
   def sma(period, date)
-    etf_price = EtfPrice.where(name: name).where(date: date).first
-    raise "Invalid date for the etf #{date}" if etf_price.blank?
-
-    records_close = EtfPrice.where(name: name).where("date <= '#{self.date}'").order(date: :desc).limit(period).pluck(:close)
+    records_close = EtfPrice.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period).pluck(:close)
     return nil if records_close.count < period
 
     compute_sma(records_close)
   end
 
   def current_rsi(period)
-    if market_opened?
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(period).pluck(:close)
-      records_close.unshift(current_price)
-    else
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(period+1).pluck(:close)
-    end
+    records_close = get_records_close(period + 1)
+    return nil if records_close.count < period + 1
 
     compute_rsi(records_close)
   end
@@ -52,14 +40,34 @@ class Etf
   def rsi(period, date)
     records_close = EtfPrice.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(period+1).pluck(:close)
     return nil if records_close.count < period + 1
+
     compute_rsi(records_close)
   end
 
-  def current_price
+  # Last three prices should be above given sma
+  def price_above_sma?(period)
+    records_close = get_records_close(3)
+    sma_for_period = current_sma(period)
+
+    return records_close.all? {|close| close > sma_for_period}
+  end
+
+  def current_info
     DataFetcher.realtime_price(name)
   end
 
   private
+
+  def get_records_close(count)
+    if market_opened?
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count - 1).pluck(:close)
+      records_close.unshift(current_info[:price])
+    else
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count).pluck(:close)
+    end
+
+    records_close
+  end
 
   def compute_rsi(close_prices)
     period = close_prices.count - 1
