@@ -17,7 +17,7 @@ class Etf
   end
 
   def current_sma(period)
-    records_close = get_records_close(period)
+    records_close = get_latest_records_close(period)
     return nil if records_close.count < period
 
     compute_sma(records_close)
@@ -31,7 +31,7 @@ class Etf
   end
 
   def current_rsi(period)
-    records_close = get_records_close(period + 1)
+    records_close = get_latest_records_close(period + 1)
     return nil if records_close.count < period + 1
 
     compute_rsi(records_close)
@@ -46,7 +46,7 @@ class Etf
 
   # Last three prices should be above given sma
   def price_above_sma?(period)
-    records_close = get_records_close(3)
+    records_close = get_latest_records_close(3)
     sma_for_period = current_sma(period)
 
     return records_close.all? {|close| close > sma_for_period}
@@ -58,7 +58,7 @@ class Etf
 
   private
 
-  def get_records_close(count)
+  def get_latest_records_close(count)
     if market_opened?
       records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count - 1).pluck(:close)
       records_close.unshift(current_info[:price])
@@ -82,6 +82,8 @@ class Etf
 
   def market_opened?
     t = Time.now
+
+    return false if t.sunday? || t.saturday?
 
     # UTC
     Range.new(

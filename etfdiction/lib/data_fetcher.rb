@@ -5,7 +5,7 @@ module DataFetcher
   def self.update_data
     #etf_list = EtfPrice::ETF_2X_BULL[:values] + EtfPrice::ETF_3X_BULL[:values] + EtfPrice::ETF_2X_BEAR[:values] + EtfPrice::ETF_3X_BEAR[:values] + ETF::ETF_BULL[:values]
 
-    etf_list = EtfPrice::ETF_BULL[:values]
+    etf_list = Etf::ETF_BULL[:values]
     etf_list.each do |etf_name|
       records = csv_data_from_yahoo(etf_name)
       last_trading_date = EtfPrice.where(name: etf_name).order(date: :desc).limit(1).pluck(:date).to_a.first
@@ -26,7 +26,7 @@ module DataFetcher
     data = Manticore.get(url).body
     parsed_data = JSON.parse(data.split("//").second).first
     current_price = parsed_data['l'].to_f
-    current_date = Date.parse(parsed_data['lt_dts'].to_f)
+    current_date = Date.parse(parsed_data['lt_dts'])
 
     {price: current_price, date: current_date}
   end
