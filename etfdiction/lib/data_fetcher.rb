@@ -3,8 +3,6 @@ require 'csv'
 module DataFetcher
 
   def self.update_data
-    #etf_list = EtfPrice::ETF_2X_BULL[:values] + EtfPrice::ETF_3X_BULL[:values] + EtfPrice::ETF_2X_BEAR[:values] + EtfPrice::ETF_3X_BEAR[:values] + ETF::ETF_BULL[:values]
-
     etf_list = Etf::ETF_BULL[:values]
     etf_list.each do |etf_name|
       records = csv_data_from_yahoo(etf_name)
@@ -21,6 +19,7 @@ module DataFetcher
   end
 
   def self.realtime_price(etf)
+    # http://www.google.com/finance/getprices?q=BRZU&f=o,h,c,l&p=1D&i=80000
     # Documentation: http://m.blog.csdn.net/blog/solaris_navi/6730464
     url = "http://finance.google.com/finance/info?client=ig&q=#{etf}"
     data = Manticore.get(url).body
@@ -29,6 +28,12 @@ module DataFetcher
     current_date = Date.parse(parsed_data['lt_dts'])
 
     {price: current_price, date: current_date}
+  end
+
+  def self.realtime_from_google(etf)
+    url = "http://www.google.com/finance/getprices?q=#{etf}&f=o,h,c,l&p=1D"
+    data = Manticore.get(url).body.split("\n").last.split(',').map(&:to_f)
+    {close: data[0], high: data[1], low: data[2], open: data[3]}
   end
 
   private

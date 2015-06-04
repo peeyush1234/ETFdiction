@@ -16,8 +16,42 @@ class Etf
     self.name = name
   end
 
+  def self.all
+    ETF_BULL[:values].map{|etf_name| self.new(etf_name)}
+  end
+
+  def realtime_from_yahoo
+    url = "http://finance.yahoo.com/q?d=t&s=#{name}"
+    page = Nokogiri::HTML(Manticore.get(url).body)
+    current = page.css('.time_rtq_ticker').children.children.first.text.to_f
+    open = page.css('#table1').css(".yfnc_tabledata1")[1].children.first.text.to_f
+    low, high = page.css('#table2').css(".yfnc_tabledata1")[0].children.text.split('-').map(&:to_f)
+    {current: current, open: open, low: low, high: high}
+  end
+
+  def self.day_3_high_low_etfs
+    all.select {|etf| etf.day_3_high_low?}
+  end
+
+  def day_3_high_low?
+    return false if price_above_sma?
+
+    etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
+    current = realtime_from_yahoo
+    return true if (
+      (etf_prices[1].high < etf_prices[0].high) &&
+      (etf_prices[2].high < etf_prices[1].high) &&
+      (etf_prices[1].low < etf_prices[0].low) &&
+      (etf_prices[2].low < etf_prices[1].low) &&
+      (current[:low] < etf_prices[2].low) &&
+      (current[:high] < etf_prices[2].high)
+    )
+
+    false
+  end
+
   def current_sma(period)
-    records_close = get_latest_records_close(period)
+    records_close = get_latest_records(:close, period)
     return nil if records_close.count < period
 
     compute_sma(records_close)
@@ -31,7 +65,7 @@ class Etf
   end
 
   def current_rsi(period)
-    records_close = get_latest_records_close(period + 1)
+    records_close = get_latest_records(:close, period + 1)
     return nil if records_close.count < period + 1
 
     compute_rsi(records_close)
@@ -46,7 +80,7 @@ class Etf
 
   # Last three prices should be above given sma
   def price_above_sma?(period)
-    records_close = get_latest_records_close(3)
+    records_close = get_latest_records(:close, 3)
     sma_for_period = current_sma(period)
 
     return records_close.all? {|close| close > sma_for_period}
@@ -58,12 +92,12 @@ class Etf
 
   private
 
-  def get_latest_records_close(count)
+  def get_latest_records(metric, count)
     if market_opened?
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count - 1).pluck(:close)
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count - 1).pluck(metric)
       records_close.unshift(current_info[:price])
     else
-      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count).pluck(:close)
+      records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count).pluck(metric)
     end
 
     records_close
