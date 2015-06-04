@@ -29,12 +29,15 @@ class Etf
     {current: current, open: open, low: low, high: high}
   end
 
+  memoize :realtime_from_yahoo
+
   def self.day_3_high_low_etfs
     all.select {|etf| etf.day_3_high_low?}
   end
 
+  # Chapter 2
   def day_3_high_low?
-    return false if price_above_sma?
+    return false unless price_above_sma?
 
     etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
     current = realtime_from_yahoo
@@ -46,6 +49,30 @@ class Etf
       (current[:low] < etf_prices[2].low) &&
       (current[:high] < etf_prices[2].high)
     )
+
+    false
+  end
+
+  # Chapter 3
+  def rsi_25?
+    return false unless price_above_sma?(200)
+
+    return true if current_rsi(4) < 25
+
+    return false
+  end
+
+  # Chapter 4
+  def r_3?
+    return false unless price_above_sma?(200)
+
+    today = Date.today
+
+    past_rsi_2_period = rsi(2, today - 2.days)
+
+    return true if ( past_rsi_2_period < 60 &&
+                     rsi(2, today - 1.days) < past_rsi_2_period &&
+                     current_rsi(2) < 10)
 
     false
   end
@@ -86,16 +113,12 @@ class Etf
     return records_close.all? {|close| close > sma_for_period}
   end
 
-  def current_info
-    DataFetcher.realtime_price(name)
-  end
-
   private
 
   def get_latest_records(metric, count)
     if market_opened?
       records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count - 1).pluck(metric)
-      records_close.unshift(current_info[:price])
+      records_close.unshift(realtime_from_yahoo[:current])
     else
       records_close = EtfPrice.where(name: name).where("date <= '#{Date.today-1}'").order(date: :desc).limit(count).pluck(metric)
     end

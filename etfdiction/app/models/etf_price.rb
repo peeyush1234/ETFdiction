@@ -53,6 +53,7 @@ class EtfPrice < ActiveRecord::Base
     result
   end
 
+  # Cha
   def self.r_3?(etf)
     # TODO: Complete me
   end
