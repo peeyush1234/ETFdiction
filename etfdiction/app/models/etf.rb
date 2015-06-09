@@ -1,4 +1,5 @@
 class Etf
+  extend Memoist
 
   ETF_3X_BULL = {name: "etf_3x_bull", values: ['BAR',	'BRZU',	'BUNT',	'CURE',	'DRN',	'DZK',	'EDC',	'ERX',	'EURL',	'FAS',	'FINU',	'GASL',	'INDL',	'JDST',	'JGBT',	'JNUG',	'JPNL',	'LBJ',	'MATL',	'MIDU',	'NUGT',	'RETL',	'RUSL',	'SOXL',	'SPXL',	'TECL',	'TMF',	'TNA',	'TQQQ',	'TYD',	'UDOW',	'UGAZ',	'UGLD',	'UMDD',	'UPRO',	'URTY',	'USLV',	'UWTI',	'YINN']}.freeze
 
@@ -37,18 +38,28 @@ class Etf
 
   # Chapter 2
   def day_3_high_low?
-    return false unless price_above_sma?
+    return false unless price_above_sma?(200)
 
-    etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
-    current = realtime_from_yahoo
-    return true if (
+    if market_opened?
+      etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
+      current = realtime_from_yahoo
+      return true if (
+        (etf_prices[1].high < etf_prices[0].high) &&
+        (etf_prices[2].high < etf_prices[1].high) &&
+        (etf_prices[1].low < etf_prices[0].low) &&
+        (etf_prices[2].low < etf_prices[1].low) &&
+        (current[:low] < etf_prices[2].low) &&
+        (current[:high] < etf_prices[2].high)
+      )
+    else
+      etf_prices = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(3).reverse
+      return true if (
       (etf_prices[1].high < etf_prices[0].high) &&
-      (etf_prices[2].high < etf_prices[1].high) &&
-      (etf_prices[1].low < etf_prices[0].low) &&
-      (etf_prices[2].low < etf_prices[1].low) &&
-      (current[:low] < etf_prices[2].low) &&
-      (current[:high] < etf_prices[2].high)
-    )
+        (etf_prices[2].high < etf_prices[1].high) &&
+        (etf_prices[1].low < etf_prices[0].low) &&
+        (etf_prices[2].low < etf_prices[1].low)
+      )
+      end
 
     false
   end
