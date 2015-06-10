@@ -42,7 +42,7 @@ gem 'securities', ">= 2.0.0", "< 3.0.0"
 gem 'memoist', '~> 0.12.0'
 gem 'react-rails', '~> 1.0'
 gem 'haml'
-gem 'react-bootstrap-rails'
+gem 'twitter-bootstrap-rails'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

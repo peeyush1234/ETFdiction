@@ -1,7 +1,7 @@
+headLabel = React.DOM.label
+  className: "label label-default"
+  children: "Registers"
+
 @Etfs = React.createClass
   render: ->
-    React.DOM.div
-      className: 'etfs'
-      React.DOM.h2
-        className: 'title'
-        'etfs'
+    headLabel
