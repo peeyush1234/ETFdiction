@@ -26,7 +26,7 @@
         className: 'form-group'
         React.DOM.input
           type: 'text'
-          className: 'form-control'
+          className: 'form-control input-sm'
           placeholder: 'Name'
           name: 'name'
           value: @state.name
@@ -35,7 +35,7 @@
         className: 'form-group'
         React.DOM.input
           type: 'text'
-          className: 'form-control'
+          className: 'form-control input-sm'
           placeholder: 'Price'
           name: 'price'
           value: @state.price
@@ -44,14 +44,14 @@
         className: 'form-group'
         React.DOM.input
           type: 'text'
-          className: 'form-control'
+          className: 'form-control input-sm'
           placeholder: 'Quantity'
           name: 'quantity'
           value: @state.quantity
           onChange: @handleChange
       React.DOM.button
         type: 'submit'
-        className: 'btn btn-primary'
+        className: 'btn btn-primary btn-sm'
         disabled: !@valid()
         'Add transaction'
 

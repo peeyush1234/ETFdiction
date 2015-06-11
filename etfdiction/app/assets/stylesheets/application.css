@@ -13,3 +13,16 @@
  *= require_tree .
  *= require_self
  */
+
+.table-nonfluid {
+    width: auto !important;
+    text-align: center;
+}
+
+.table tbody tr > td.success {
+    background-color: #dff0d8 !important;
+}
+
+.table tbody tr > td.error {
+    background-color: #f2dede !important;
+}

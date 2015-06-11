@@ -1,16 +1,19 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.all
+    @transactions = Transaction.all.order(created_at: :desc)
   end
 
   def create
-    @transaction = Transaction.new(transaction_params)
+    transaction = Transaction.new(transaction_params)
 
-    if @transaction.save
-      render json: @transaction
-    else
-      render json: @transaction.errors, status: :unprocessable_entity
-    end
+    transaction.save!
+
+    render json: transaction
+  end
+
+  def destroy
+    Transaction.find(params[:id]).destroy
+    head :no_content
   end
 
   private

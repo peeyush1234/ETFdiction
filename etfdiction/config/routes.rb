@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'etfs#index'
 
-  resources :transactions, only: [:index, :create]
+  resources :etfs, only: [:index, :show], param: :name
+
+  resources :transactions, only: [:index, :create, :destroy]
+
+  resources :positions, only: [:index]
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
