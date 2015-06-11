@@ -15,8 +15,11 @@
  */
 
 .table-nonfluid {
-    width: auto !important;
     text-align: center;
+}
+
+.past-transactions {
+    margin-top: 30px;
 }
 
 .table tbody tr > td.success {

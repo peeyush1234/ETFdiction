@@ -33,13 +33,18 @@
           onChange: @handleChange
       React.DOM.div
         className: 'form-group'
-        React.DOM.input
-          type: 'text'
-          className: 'form-control input-sm'
-          placeholder: 'Price'
-          name: 'price'
-          value: @state.price
-          onChange: @handleChange
+        React.DOM.div
+          className: 'input-group'
+          React.DOM.div
+            className: 'input-group-addon'
+            '$'
+          React.DOM.input
+            type: 'text'
+            className: 'form-control input-sm'
+            placeholder: 'Price'
+            name: 'price'
+            value: @state.price
+            onChange: @handleChange
       React.DOM.div
         className: 'form-group'
         React.DOM.input

@@ -34,36 +34,45 @@
   render: ->
     React.DOM.div
       className: 'welcome'
-      React.DOM.h2
-        className: 'title'
-        'Records'
-      React.createElement TransactionForm, handleNewTransaction: @addTransaction
-      React.DOM.h3
-        className: 'title'
-        'Open Positions'
-      React.DOM.table
-        className: 'table table-nonfluid table-bordered table-condensed'
-        React.DOM.thead null,
-          React.DOM.tr null,
-            React.DOM.th null, 'Name'
-            React.DOM.th null, 'Average Price'
-            React.DOM.th null, 'Quantity'
-            React.DOM.th null, 'Current Price'
-        React.DOM.tbody null,
-          for position in @state.openPositions
-            React.createElement Position, key: position.name, position: position, pollInterval: 60000
-      React.DOM.h3
-        className: 'title'
-        'All Transactions'
-      React.DOM.table
-        className: 'table table-bordered table-nonfluid table-condensed'
-        React.DOM.thead null,
-          React.DOM.tr null,
-            React.DOM.th null, 'Date'
-            React.DOM.th null, 'Name'
-            React.DOM.th null, 'Price'
-            React.DOM.th null, 'Quantity'
-            React.DOM.th null, 'Actions'
-        React.DOM.tbody null,
-          for transaction in @state.transactions
-            React.createElement Transaction, key: transaction.id, transaction: transaction, handleDeleteTransaction: @deleteTransaction
+      React.DOM.div
+        className: 'panel panel-info'
+        React.DOM.div
+          className: 'panel-heading'
+          React.DOM.h3
+            className: 'panel-title'
+            'Open Positions'
+        React.DOM.div
+          className: 'panel-body'
+          React.DOM.table
+            className: 'table table-condensed table-striped'
+            React.DOM.thead null,
+              React.DOM.tr null,
+                React.DOM.th null, 'N'
+                React.DOM.th null, 'AP'
+                React.DOM.th null, 'Q'
+                React.DOM.th null, 'CP'
+            React.DOM.tbody null,
+              for position in @state.openPositions
+                React.createElement Position, key: position.name, position: position, pollInterval: 60000
+      React.DOM.div
+        className: 'panel panel-default'
+        React.DOM.div
+          className: 'panel-heading'
+          React.DOM.h3
+            className: 'panel-title'
+            "Transactions"
+        React.DOM.div
+          className: 'panel-body'
+          React.createElement TransactionForm, handleNewTransaction: @addTransaction
+          React.DOM.table
+            className: 'past-transactions table table-condensed table-striped'
+            React.DOM.thead null,
+              React.DOM.tr null,
+                React.DOM.th null, 'Date'
+                React.DOM.th null, 'Name'
+                React.DOM.th null, 'Price'
+                React.DOM.th null, 'Quantity'
+                React.DOM.th null, 'Actions'
+            React.DOM.tbody null,
+              for transaction in @state.transactions
+                React.createElement Transaction, key: transaction.id, transaction: transaction, handleDeleteTransaction: @deleteTransaction
