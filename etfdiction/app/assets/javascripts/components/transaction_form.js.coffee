@@ -8,7 +8,7 @@
 
   handleSubmit: (e) ->
     e.preventDefault()
-    $.post '', {transaction: @state}, (data) =>
+    $.post '/transactions', {transaction: @state}, (data) =>
       @props.handleNewTransaction data
       @setState @getInitialState
     , 'JSON'

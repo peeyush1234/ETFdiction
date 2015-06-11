@@ -1,6 +1,6 @@
-@Transactions = React.createClass
+@Welcome = React.createClass
   getInitialState: ->
-    transactions: @props.data
+    transactions: []
     openPositions: []
 
   getOpenPositionsFromServer: ->
@@ -8,8 +8,15 @@
       @setState openPositions: data
     , 'JSON'
 
+  getAllTransactionsFromServer: ->
+    $.get '/transactions', (data) =>
+      @setState transactions: data
+    , 'JSON'
+
   componentDidMount: ->
+    @getAllTransactionsFromServer()
     @getOpenPositionsFromServer()
+    console.log(@state)
 
   deleteTransaction: (transaction) ->
     transactions = @state.transactions.slice()
@@ -26,7 +33,7 @@
 
   render: ->
     React.DOM.div
-      className: 'transactions'
+      className: 'welcome'
       React.DOM.h2
         className: 'title'
         'Records'
