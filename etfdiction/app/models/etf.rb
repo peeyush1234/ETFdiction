@@ -11,6 +11,13 @@ class Etf
 
   ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
+  # Display name and methog name should be unique
+  ETF_STRATEGIES = [
+                    {method_name: 'day_3_high_low?', display_name: 'D3HL'},
+                    {method_name: 'rsi_25?', display_name: 'RSI25'},
+                    {method_name: 'r_3?', display_name: 'R3'}
+                   ]
+
   attr_accessor :name
 
   def initialize(name)

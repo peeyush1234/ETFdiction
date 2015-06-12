@@ -1,9 +1,27 @@
 class EtfsController < ApplicationController
   def index
-    @day_3_high_low_etfs = "Boy"#Etf.day_3_high_low_etfs
+    response = case params[:request]
+      when 'etf_bull'
+        Etf::ETF_BULL[:values]
+      when 'etf_strategies'
+        Etf::ETF_STRATEGIES.map{|i| i[:display_name]}
+      else
+        raise 'Invalid request for Etfs index action'
+    end
+
+    render json: response
   end
 
   def show
-    render json: Etf.new(params[:name]).realtime_from_yahoo[:current] if params[:request] == 'current_price'
+    response = case params[:request]
+      when 'current_price'
+        Etf.new(params[:name]).realtime_from_yahoo[:current]
+      when 'strategies_result'
+        Etf::ETF_STRATEGIES.map{|i| {strategy_name: i[:display_name], result: "BAM"}}
+      else
+        raise 'Invalid request for Etfs show action'
+    end
+
+    render json: response
   end
 end

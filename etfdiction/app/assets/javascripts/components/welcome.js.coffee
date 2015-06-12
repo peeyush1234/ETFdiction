@@ -2,6 +2,18 @@
   getInitialState: ->
     transactions: []
     openPositions: []
+    etfs: []
+    etf_strategies: []
+
+  getEtfList: ->
+    $.get '/etfs',{request: 'etf_bull'}, (data) =>
+      @setState etfs: data
+    , 'JSON'
+
+  getEtfStrategies: ->
+    $.get '/etfs',{request: 'etf_strategies'}, (data) =>
+      @setState etf_strategies: data
+    , 'JSON'
 
   getOpenPositionsFromServer: ->
     $.get '/positions', (data) =>
@@ -16,7 +28,9 @@
   componentDidMount: ->
     @getAllTransactionsFromServer()
     @getOpenPositionsFromServer()
-    console.log(@state)
+    @getEtfList()
+    @getEtfStrategies()
+
 
   deleteTransaction: (transaction) ->
     transactions = @state.transactions.slice()
@@ -34,6 +48,14 @@
   render: ->
     React.DOM.div
       className: 'welcome'
+
+      # -- Analysis --
+      if marketOpen()
+        React.createElement CurrentStatus, etfs: @state.etfs, etf_strategies: @state.etf_strategies
+      else
+        React.createElement TomorrowAnalysis, etfs: @state.etfs, etf_strategies: @state.etf_strategies
+
+      # -- Open Positions --
       React.DOM.div
         className: 'panel panel-info'
         React.DOM.div
@@ -54,6 +76,8 @@
             React.DOM.tbody null,
               for position in @state.openPositions
                 React.createElement Position, key: position.name, position: position, pollInterval: 60000
+
+      # -- Transactions --
       React.DOM.div
         className: 'panel panel-default'
         React.DOM.div
