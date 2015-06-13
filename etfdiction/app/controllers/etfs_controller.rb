@@ -4,7 +4,7 @@ class EtfsController < ApplicationController
       when 'etf_bull'
         Etf::ETF_BULL[:values]
       when 'etf_strategies'
-        Etf::ETF_STRATEGIES.map{|i| i[:display_name]}
+        Etf::ETF_STRATEGIES.map{|i| i[:strategy_name]}
       else
         raise 'Invalid request for Etfs index action'
     end
@@ -17,7 +17,7 @@ class EtfsController < ApplicationController
       when 'current_price'
         Etf.new(params[:name]).realtime_from_yahoo[:current]
       when 'strategies_result'
-        Etf::ETF_STRATEGIES.map{|i| {strategy_name: i[:display_name], result: "BAM"}}
+        Etf.new(params[:name]).strategies_result
       else
         raise 'Invalid request for Etfs show action'
     end

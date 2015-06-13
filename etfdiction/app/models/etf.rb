@@ -13,15 +13,22 @@ class Etf
 
   # Display name and methog name should be unique
   ETF_STRATEGIES = [
-                    {method_name: 'day_3_high_low?', display_name: 'D3HL'},
-                    {method_name: 'rsi_25?', display_name: 'RSI25'},
-                    {method_name: 'r_3?', display_name: 'R3'}
+                    {method_name: :price_above_sma_200?, strategy_name: 'A200'},
+                    {method_name: :day_3_high_low?, strategy_name: 'D3HL'},
+                    {method_name: :rsi_25?, strategy_name: 'RSI25'},
+                    {method_name: :r_3?, strategy_name: 'R3'}
                    ]
 
   attr_accessor :name
 
   def initialize(name)
     self.name = name
+  end
+
+  def strategies_result
+    ETF_STRATEGIES.map do |i|
+      {strategy_name: i[:strategy_name], result: self.send(i[:method_name]) ? 1 : 0}
+    end
   end
 
   def self.all
@@ -129,6 +136,10 @@ class Etf
     sma_for_period = current_sma(period)
 
     return records_close.all? {|close| close > sma_for_period}
+  end
+
+  def price_above_sma_200?
+    price_above_sma?(200)
   end
 
   private
