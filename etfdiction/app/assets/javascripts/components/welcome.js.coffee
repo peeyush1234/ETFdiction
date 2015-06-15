@@ -10,11 +10,6 @@
       @setState etfs: data
     , 'JSON'
 
-  getEtfStrategies: ->
-    $.get '/etfs',{request: 'etf_strategies'}, (data) =>
-      @setState etf_strategies: data
-    , 'JSON'
-
   getOpenPositionsFromServer: ->
     $.get '/positions', (data) =>
       @setState openPositions: data
@@ -29,7 +24,6 @@
     @getAllTransactionsFromServer()
     @getOpenPositionsFromServer()
     @getEtfList()
-    @getEtfStrategies()
 
 
   deleteTransaction: (transaction) ->
@@ -51,9 +45,9 @@
 
       # -- Analysis --
       if marketOpen()
-        React.createElement CurrentStatus, etfs: @state.etfs, etf_strategies: @state.etf_strategies
+        React.createElement CurrentStatus, etfs: @state.etfs
       else
-        React.createElement TomorrowAnalysis, etfs: @state.etfs, etf_strategies: @state.etf_strategies
+        React.createElement TomorrowAnalysis, etfs: @state.etfs
 
       # -- Open Positions --
       React.DOM.div

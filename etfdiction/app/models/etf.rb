@@ -11,13 +11,19 @@ class Etf
 
   ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
-  # Display name and methog name should be unique
-  ETF_STRATEGIES = [
-                    {method_name: :price_above_sma_200?, strategy_name: 'A200'},
-                    {method_name: :day_3_high_low?, strategy_name: 'D3HL'},
-                    {method_name: :rsi_25?, strategy_name: 'RSI25'},
-                    {method_name: :r_3?, strategy_name: 'R3'}
-                   ]
+  # Display name and method name should be unique
+  A200_ETF_STRATEGIES = [
+    {method_name: :a200_day_3_high_low?, strategy_name: 'D3HLA'},
+    {method_name: :a200_rsi_25?, strategy_name: 'RSI25A'},
+    {method_name: :a200_r_3?, strategy_name: 'R3A'}
+  ]
+
+  # Display name and method name should be unique
+  B200_ETF_STRATEGIES = [
+    {method_name: :b200_day_3_high_low?, strategy_name: 'D3HLB'},
+    {method_name: :b200_rsi_25?, strategy_name: 'RSI25B'},
+    {method_name: :b200_r_3?, strategy_name: 'R3B'}
+  ]
 
   attr_accessor :name
 
@@ -25,8 +31,14 @@ class Etf
     self.name = name
   end
 
-  def strategies_result
-    ETF_STRATEGIES.map do |i|
+  def a200_strategies_result
+    A200_ETF_STRATEGIES.map do |i|
+      {strategy_name: i[:strategy_name], result: self.send(i[:method_name]) ? 1 : 0}
+    end
+  end
+
+  def b200_strategies_result
+    B200_ETF_STRATEGIES.map do |i|
       {strategy_name: i[:strategy_name], result: self.send(i[:method_name]) ? 1 : 0}
     end
   end
@@ -46,58 +58,94 @@ class Etf
 
   memoize :realtime_from_yahoo
 
-  def self.day_3_high_low_etfs
-    all.select {|etf| etf.day_3_high_low?}
-  end
-
-  # Chapter 2
-  def day_3_high_low?
-    return false unless price_above_sma?(200)
-
+  # Chapter 2A
+  def a200_day_3_high_low?
     if market_opened?
       etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
       current = realtime_from_yahoo
       return true if (
-        (etf_prices[1].high < etf_prices[0].high) &&
-        (etf_prices[2].high < etf_prices[1].high) &&
-        (etf_prices[1].low < etf_prices[0].low) &&
-        (etf_prices[2].low < etf_prices[1].low) &&
-        (current[:low] < etf_prices[2].low) &&
-        (current[:high] < etf_prices[2].high)
+        (etf_prices[1].high <= etf_prices[0].high) &&
+        (etf_prices[2].high <= etf_prices[1].high) &&
+        (etf_prices[1].low <= etf_prices[0].low) &&
+        (etf_prices[2].low <= etf_prices[1].low) &&
+        (current[:low] <= etf_prices[2].low) &&
+        (current[:high] <= etf_prices[2].high)
       )
     else
       etf_prices = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(3).reverse
       return true if (
-      (etf_prices[1].high < etf_prices[0].high) &&
-        (etf_prices[2].high < etf_prices[1].high) &&
-        (etf_prices[1].low < etf_prices[0].low) &&
-        (etf_prices[2].low < etf_prices[1].low)
+      (etf_prices[1].high <= etf_prices[0].high) &&
+        (etf_prices[2].high <= etf_prices[1].high) &&
+        (etf_prices[1].low <= etf_prices[0].low) &&
+        (etf_prices[2].low <= etf_prices[1].low)
       )
       end
 
     false
   end
 
-  # Chapter 3
-  def rsi_25?
-    return false unless price_above_sma?(200)
+  # TODO: Chapter 2B
+  def b200_day_3_high_low?
+    if market_opened?
+      etf_prices = EtfPrice.where(name: name).where("date < '#{Date.today}'").order(date: :desc).limit(3).reverse
+      current = realtime_from_yahoo
+      return true if (
+      (etf_prices[1].high >= etf_prices[0].high) &&
+        (etf_prices[2].high >= etf_prices[1].high) &&
+        (etf_prices[1].low >= etf_prices[0].low) &&
+        (etf_prices[2].low >= etf_prices[1].low) &&
+        (current[:low] >= etf_prices[2].low) &&
+        (current[:high] >= etf_prices[2].high)
+      )
+    else
+      etf_prices = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(3).reverse
+      return true if (
+      (etf_prices[1].high >= etf_prices[0].high) &&
+        (etf_prices[2].high >= etf_prices[1].high) &&
+        (etf_prices[1].low >= etf_prices[0].low) &&
+        (etf_prices[2].low >= etf_prices[1].low)
+      )
+    end
 
-    return true if current_rsi(4) < 25
+    false
+  end
+
+  # Chapter 3A
+  def a200_rsi_25?
+    return true if current_rsi(4) <= 25
 
     return false
   end
 
-  # Chapter 4
-  def r_3?
-    return false unless price_above_sma?(200)
+  # Chapter 3B
+  def b200_rsi_25?
+    return true if current_rsi(4) >= 75
 
+    return false
+  end
+
+  # Chapter 4A
+  def a200_r_3?
     today = Date.today
 
     past_rsi_2_period = rsi(2, today - 2.days)
 
-    return true if ( past_rsi_2_period < 60 &&
-                     rsi(2, today - 1.days) < past_rsi_2_period &&
-                     current_rsi(2) < 10)
+    return true if ( past_rsi_2_period <= 60 &&
+                     rsi(2, today - 1.days) <= past_rsi_2_period &&
+                     current_rsi(2) <= 10)
+
+    false
+  end
+
+  # Chapter 4B
+  def b200_r_3?
+    today = Date.today
+
+    past_rsi_2_period = rsi(2, today - 2.days)
+
+    return true if ( past_rsi_2_period >= 40 &&
+      rsi(2, today - 1.days) >= past_rsi_2_period &&
+      current_rsi(2) > 90)
 
     false
   end
