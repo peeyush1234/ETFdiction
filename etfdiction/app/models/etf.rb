@@ -9,20 +9,22 @@ class Etf
 
   ETF_2X_BEAR = {name: "etf_2x_bear", values: ['AGA',	'BIS',	'BOM',	'BZQ',	'CMD',	'CROC',	'DEE',	'DGZ',	'DRR',	'DTO',	'DUG',	'DXD',	'DZZ',	'EEV',	'EFU',	'EPV',	'EUO',	'EWV',	'FXP',	'GLL',	'KOLD',	'MZZ',	'PST',	'QID',	'REW',	'RXD',	'SCC',	'SCIN',	'SCO',	'SDD',	'SDP',	'SDS',	'SIJ',	'SKF',	'SMK',	'SMN',	'SRS',	'SSG',	'SZK',	'TBT',	'TBZ',	'TLL',	'TPS',	'TWM',	'YCS',	'ZSL']}.freeze
 
-  ETF_BULL = {name: "etf_bull", values: ['RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
+  ETF_BULL = {name: "etf_bull", values: ['GLD', 'UNG', 'RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
   # Display name and method name should be unique
   A200_ETF_STRATEGIES = [
     {method_name: :a200_day_3_high_low?, strategy_name: 'D3HLA'},
     {method_name: :a200_rsi_25?, strategy_name: 'RSI25A'},
-    {method_name: :a200_r_3?, strategy_name: 'R3A'}
+    {method_name: :a200_r_3?, strategy_name: 'R3A'},
+    {method_name: :a200_bb?, strategy_name: 'BBA'}
   ]
 
   # Display name and method name should be unique
   B200_ETF_STRATEGIES = [
     {method_name: :b200_day_3_high_low?, strategy_name: 'D3HLB'},
     {method_name: :b200_rsi_25?, strategy_name: 'RSI25B'},
-    {method_name: :b200_r_3?, strategy_name: 'R3B'}
+    {method_name: :b200_r_3?, strategy_name: 'R3B'},
+    {method_name: :b200_bb?, strategy_name: 'BBB'}
   ]
 
   attr_accessor :name
@@ -57,6 +59,35 @@ class Etf
   end
 
   memoize :realtime_from_yahoo
+
+  #chapter 5A
+  def a200_bb?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(5).pluck(:close)
+    bb_1 = compute_bb(records_close[1..-1])
+    bb_2 = compute_bb(records_close[0..-1])
+    if market_opened?
+      current_bb = compute_bb([realtime_from_yahoo[:current]].concat(records_close))
+      return true if (bb_1 <= 0.2 && bb_2 <= 0.2 && current_bb <= 0.2)
+    else
+      return true if (bb_1 <= 0.2 && bb_2 <= 0.2)
+    end
+
+    false
+  end
+
+  def b200_bb?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(5).pluck(:close)
+    bb_1 = compute_bb(records_close[1..-1])
+    bb_2 = compute_bb(records_close[0..-1])
+    if market_opened?
+      current_bb = compute_bb([realtime_from_yahoo[:current]].concat(records_close))
+      return true if (bb_1 >= 0.8 && bb_2 >= 0.8 && current_bb >= 0.8)
+    else
+      return true if (bb_1 >= 0.8 && bb_2 >= 0.8)
+    end
+
+    false
+  end
 
   # Chapter 2A
   def a200_day_3_high_low?
@@ -128,24 +159,40 @@ class Etf
   def a200_r_3?
     today = Date.today
 
-    past_rsi_2_period = rsi(2, today - 2.days)
+    records_close = EtfPrice.where(name: name).where("date <= '#{today}'").order(date: :desc).limit(5).pluck(:close)
 
-    return true if ( past_rsi_2_period <= 60 &&
-                     rsi(2, today - 1.days) <= past_rsi_2_period &&
+    past_first_rsi_2_period = compute_rsi(records_close[1..3])
+    past_second_rsi_2_period = compute_rsi(records_close[0..2])
+
+    if market_opened?
+        return true if ( past_first_rsi_2_period <= 60 &&
+                     past_second_rsi_2_period <= past_first_rsi_2_period &&
                      current_rsi(2) <= 10)
-
+    else
+      return true if ( past_first_rsi_2_period <= 60 &&
+        past_second_rsi_2_period <= past_first_rsi_2_period)
+    end
     false
   end
 
   # Chapter 4B
+  #TODO fix date issue
   def b200_r_3?
     today = Date.today
 
-    past_rsi_2_period = rsi(2, today - 2.days)
+    records_close = EtfPrice.where(name: name).where("date <= '#{today}'").order(date: :desc).limit(5).pluck(:close)
 
-    return true if ( past_rsi_2_period >= 40 &&
-      rsi(2, today - 1.days) >= past_rsi_2_period &&
-      current_rsi(2) > 90)
+    past_first_rsi_2_period = compute_rsi(records_close[1..3])
+    past_second_rsi_2_period = compute_rsi(records_close[0..2])
+
+    if market_opened?
+      return true if ( past_first_rsi_2_period >= 40 &&
+        past_second_rsi_2_period >= past_first_rsi_2_period &&
+        current_rsi(2) > 90)
+    else
+      return true if ( past_first_rsi_2_period >= 40 &&
+        past_second_rsi_2_period >= past_first_rsi_2_period)
+    end
 
     false
   end
@@ -178,6 +225,13 @@ class Etf
     compute_rsi(records_close)
   end
 
+  def bb(date)
+    records_close = EtfPrice.where(name: name).where("date <= '#{date}'").order(date: :desc).limit(20).pluck(:close)
+    return nil if records_close.count < 20
+
+    compute_bb(records_close)
+  end
+
   # Last three prices should be above given sma
   def price_above_sma?(period)
     records_close = get_latest_records(:close, 3)
@@ -207,6 +261,10 @@ class Etf
     period = close_prices.count - 1
     data_setup = Indicators::Data.new(close_prices.reverse)
     data_setup.calc(type: :rsi, params: period).output.last.round(2)
+  end
+
+  def compute_bb(close_prices)
+    BollingerBand.new.compute_bollinger(close_prices).first.last.to_f.round(2)
   end
 
   def compute_sma(close_prices)
