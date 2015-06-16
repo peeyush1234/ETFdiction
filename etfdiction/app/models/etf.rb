@@ -11,26 +11,28 @@ class Etf
 
   ETF_BULL = {name: "etf_bull", values: ['GLD', 'UNG', 'RSX', 'EWZ', 'INDA', 'EWJ', 'EWY', 'IEV', 'MCHI']}
 
+  STRATEGIES_LIST = [:DHL, :R25, :RS3, :BBP, :MUD, :R10, :TPS]
+
   # Display name and method name should be unique
   A200_ETF_STRATEGIES = [
-    {method_name: :a200_day_3_high_low?, strategy_name: 'DHL'},
-    {method_name: :a200_rsi_25?, strategy_name: 'R25'},
-    {method_name: :a200_r_3?, strategy_name: 'RS3'},
-    {method_name: :a200_bb?, strategy_name: 'BBP'},
-    {method_name: :a200_multiple_day_up_down?, strategy_name: 'MUD'},
-    {method_name: :a200_rsi_10_6?, strategy_name: 'R10'},
-    {method_name: :a200_rsi_25_2?, strategy_name: 'TPS'}
+    {method_name: :a200_day_3_high_low?, strategy_name: :DHL},
+    {method_name: :a200_rsi_25?, strategy_name: :R25},
+    {method_name: :a200_r_3?, strategy_name: :RS3},
+    {method_name: :a200_bb?, strategy_name: :BBP},
+    {method_name: :a200_multiple_day_up_down?, strategy_name: :MUD},
+    {method_name: :a200_rsi_10_6?, strategy_name: :R10},
+    {method_name: :a200_rsi_25_2?, strategy_name: :TPS}
   ]
 
   # Display name and method name should be unique
   B200_ETF_STRATEGIES = [
-    {method_name: :b200_day_3_high_low?, strategy_name: 'DHL'},
-    {method_name: :b200_rsi_25?, strategy_name: 'R25'},
-    {method_name: :b200_r_3?, strategy_name: 'RS3'},
-    {method_name: :b200_bb?, strategy_name: 'BBP'},
-    {method_name: :b200_multiple_day_up_down?, strategy_name: 'MUD'},
-    {method_name: :b200_rsi_10_6?, strategy_name: 'R10'},
-    {method_name: :b200_rsi_25_2?, strategy_name: 'TPS'}
+    {method_name: :b200_day_3_high_low?, strategy_name: :DHL},
+    {method_name: :b200_rsi_25?, strategy_name: :R25},
+    {method_name: :b200_r_3?, strategy_name: :RS3},
+    {method_name: :b200_bb?, strategy_name: :BBP},
+    {method_name: :b200_multiple_day_up_down?, strategy_name: :MUD},
+    {method_name: :b200_rsi_10_6?, strategy_name: :R10},
+    {method_name: :b200_rsi_25_2?, strategy_name: :TPS}
   ]
 
   attr_accessor :name

@@ -22,6 +22,7 @@
       React.DOM.td null, @props.position.name
       React.DOM.td null, @props.position.average_price
       React.DOM.td null, @props.position.quantity
+      React.DOM.td null, "TADA"
       React.DOM.td
         className: @getPriceClass(),
         @state.current_price

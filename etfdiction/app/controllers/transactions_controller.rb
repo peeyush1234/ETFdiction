@@ -4,7 +4,15 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    transaction = Transaction.new(transaction_params)
+    t_params = params[:transaction]
+    strategies_to_include = []
+    Etf::STRATEGIES_LIST.each do |st|
+      if t_params[st.to_s] == "true"
+        strategies_to_include << st.to_s
+      end
+    end
+
+    transaction = Transaction.new(name: t_params[:name], price: t_params[:price], quantity: t_params[:quantity])
 
     transaction.save!
 
@@ -18,7 +26,4 @@ class TransactionsController < ApplicationController
 
   private
 
-  def transaction_params
-    params.require(:transaction).permit(:name, :quantity, :price)
-  end
 end

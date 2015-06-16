@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150616041653) do
+ActiveRecord::Schema.define(version: 20150616054604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20150616041653) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                       null: false
-    t.string   "strategy",      limit: 255
   end
 
   add_index "positions", ["name"], name: "index_positions_on_name", unique: true, using: :btree
@@ -50,7 +49,6 @@ ActiveRecord::Schema.define(version: 20150616041653) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                      null: false
-    t.string   "strategy",     limit: 255
   end
 
 end

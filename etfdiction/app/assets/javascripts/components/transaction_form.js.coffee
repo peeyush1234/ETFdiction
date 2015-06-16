@@ -3,6 +3,10 @@
     name = e.target.name
     @setState "#{name}": e.target.value
 
+  handleCheckboxChange: (e) ->
+    name = e.target.name
+    @setState "#{name}": e.target.checked
+
   valid: ->
     @state.name && @state.price && @state.quantity
 
@@ -17,6 +21,7 @@
     name: ''
     price: ''
     quantity: ''
+    DHL: ''
 
   render: ->
     React.DOM.form
@@ -54,6 +59,14 @@
           name: 'quantity'
           value: @state.quantity
           onChange: @handleChange
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "DHL"
+          value: @state.DHL
+          onChange: @handleCheckboxChange
+          "DHL"
       React.DOM.button
         type: 'submit'
         className: 'btn btn-primary btn-sm'

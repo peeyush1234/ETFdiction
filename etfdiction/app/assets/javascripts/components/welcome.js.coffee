@@ -76,6 +76,7 @@
                 React.DOM.th null, 'AP'
                 React.DOM.th null, 'Q'
                 React.DOM.th null, 'CP'
+                React.DOM.th null, 'S'
             React.DOM.tbody null,
               for position in @state.openPositions
                 React.createElement Position, key: position.name, position: position, pollInterval: 60000
@@ -108,6 +109,7 @@
                 React.DOM.th null, 'Name'
                 React.DOM.th null, 'Price'
                 React.DOM.th null, 'Quantity'
+                React.DOM.th null, 'Strategy'
                 React.DOM.th null, 'Actions'
             React.DOM.tbody null,
               for transaction in @state.transactions
