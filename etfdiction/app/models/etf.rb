@@ -16,7 +16,8 @@ class Etf
     {method_name: :a200_day_3_high_low?, strategy_name: 'D3HLA'},
     {method_name: :a200_rsi_25?, strategy_name: 'RSI25A'},
     {method_name: :a200_r_3?, strategy_name: 'R3A'},
-    {method_name: :a200_bb?, strategy_name: 'BBA'}
+    {method_name: :a200_bb?, strategy_name: 'BBA'},
+    {method_name: :a200_multiple_day_up_down?, strategy_name: 'MDA'}
   ]
 
   # Display name and method name should be unique
@@ -24,7 +25,8 @@ class Etf
     {method_name: :b200_day_3_high_low?, strategy_name: 'D3HLB'},
     {method_name: :b200_rsi_25?, strategy_name: 'RSI25B'},
     {method_name: :b200_r_3?, strategy_name: 'R3B'},
-    {method_name: :b200_bb?, strategy_name: 'BBB'}
+    {method_name: :b200_bb?, strategy_name: 'BBB'},
+    {method_name: :b200_multiple_day_up_down?, strategy_name: 'MDB'},
   ]
 
   attr_accessor :name
@@ -59,6 +61,46 @@ class Etf
   end
 
   memoize :realtime_from_yahoo
+
+  # Chapter 6A
+  # TODO: Add 5 day sma condition too
+  def a200_multiple_day_up_down?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(5).pluck(:close)
+    count = 0
+    count += 1 if records_close[0] < records_close[1]
+    count += 1 if records_close[1] < records_close[2]
+    count += 1 if records_close[2] < records_close[3]
+    count += 1 if records_close[3] < records_close[4]
+    if market_opened?
+      current_price = realtime_from_yahoo[:current]
+      count += 1 if current_price < records_close[0]
+      return true if count >= 4
+    else
+      return true if count >= 3
+    end
+
+    false
+  end
+
+  # Chapter 6B
+  # TODO: Add 5 day sma condition too
+  def b200_multiple_day_up_down?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(5).pluck(:close)
+    count = 0
+    count += 1 if records_close[0] > records_close[1]
+    count += 1 if records_close[1] > records_close[2]
+    count += 1 if records_close[2] > records_close[3]
+    count += 1 if records_close[3] > records_close[4]
+    if market_opened?
+      current_price = realtime_from_yahoo[:current]
+      count += 1 if current_price > records_close[0]
+      return true if count >= 4
+    else
+      return true if count >= 3
+    end
+
+    false
+  end
 
   #chapter 5A
   def a200_bb?

@@ -3,11 +3,17 @@
     transactions: []
     openPositions: []
     etfs: []
-    etf_strategies: []
+    latestDatabaseDate: ''
 
   getEtfList: ->
     $.get '/etfs',{request: 'etf_bull'}, (data) =>
       @setState etfs: data
+    , 'JSON'
+
+  getLatestDatabaseDate: ->
+    $.get '/etfs',{request: 'latest_database_date'}, (data) =>
+      console.log ("------#{data}")
+      @setState latestDatabaseDate: data
     , 'JSON'
 
   getOpenPositionsFromServer: ->
@@ -21,10 +27,10 @@
     , 'JSON'
 
   componentDidMount: ->
+    @getLatestDatabaseDate()
     @getAllTransactionsFromServer()
     @getOpenPositionsFromServer()
     @getEtfList()
-
 
   deleteTransaction: (transaction) ->
     transactions = @state.transactions.slice()
@@ -39,15 +45,18 @@
     @setState transactions: transactions
     @getOpenPositionsFromServer()
 
+  handleDatabaseUpdate: (e) ->
+    e.preventDefault()
+    $.post '/etfs', {request: 'update_data'}, (data) =>
+      alert("Database Updated")
+      @getLatestDatabaseDate()
+
   render: ->
     React.DOM.div
       className: 'welcome'
 
       # -- Analysis --
-      if marketOpen()
-        React.createElement CurrentStatus, etfs: @state.etfs
-      else
-        React.createElement TomorrowAnalysis, etfs: @state.etfs
+      React.createElement TomorrowAnalysis, etfs: @state.etfs
 
       # -- Open Positions --
       React.DOM.div
@@ -70,6 +79,15 @@
             React.DOM.tbody null,
               for position in @state.openPositions
                 React.createElement Position, key: position.name, position: position, pollInterval: 60000
+
+      # -- Update database --
+      React.DOM.div
+        className: 'update-database'
+        React.DOM.a
+          className: 'btn btn-primary btn-sm'
+          onClick: @handleDatabaseUpdate
+          "Update DB!"
+        " (Last Updated at: " + @state.latestDatabaseDate.data + ")"
 
       # -- Transactions --
       React.DOM.div

@@ -12,9 +12,14 @@ class EtfsController < ApplicationController
         Etf::A200_ETF_STRATEGIES.map{|i| i[:strategy_name]}
       when 'b200_etf_strategies'
         Etf::B200_ETF_STRATEGIES.map{|i| i[:strategy_name]}
+      when 'latest_database_date'
+        result = EtfPrice.order(date: :desc).limit(1).first.date
+        {data: result}
       else
         raise 'Invalid request for Etfs index action'
     end
+
+    Rails.logger.info "---------#{response}" if params[:request] == 'latest_database_date'
 
     render json: response
   end
@@ -32,5 +37,16 @@ class EtfsController < ApplicationController
     end
 
     render json: response
+  end
+
+  def create
+    case params[:request]
+      when 'update_data'
+        DataFetcher.update_data
+      else
+        raise 'Invalid request for Etfs create action'
+    end
+
+    render nothing: true
   end
 end
