@@ -16,7 +16,7 @@ class Etf
     {method_name: :a200_day_3_high_low?, strategy_name: 'DHL'},
     {method_name: :a200_rsi_25?, strategy_name: 'R25'},
     {method_name: :a200_r_3?, strategy_name: 'RS3'},
-    {method_name: :a200_bb?, strategy_name: 'BB%'},
+    {method_name: :a200_bb?, strategy_name: 'BBP'},
     {method_name: :a200_multiple_day_up_down?, strategy_name: 'MUD'},
     {method_name: :a200_rsi_10_6?, strategy_name: 'R10'},
     {method_name: :a200_rsi_25_2?, strategy_name: 'TPS'}
@@ -27,7 +27,7 @@ class Etf
     {method_name: :b200_day_3_high_low?, strategy_name: 'DHL'},
     {method_name: :b200_rsi_25?, strategy_name: 'R25'},
     {method_name: :b200_r_3?, strategy_name: 'RS3'},
-    {method_name: :b200_bb?, strategy_name: 'BB%'},
+    {method_name: :b200_bb?, strategy_name: 'BBP'},
     {method_name: :b200_multiple_day_up_down?, strategy_name: 'MUD'},
     {method_name: :b200_rsi_10_6?, strategy_name: 'R10'},
     {method_name: :b200_rsi_25_2?, strategy_name: 'TPS'}

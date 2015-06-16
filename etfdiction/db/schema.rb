@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150610221529) do
+ActiveRecord::Schema.define(version: 20150616041653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,18 @@ ActiveRecord::Schema.define(version: 20150610221529) do
 
   add_index "etf_prices", ["name", "date"], name: "primary_key_idx", unique: true, using: :btree
 
+  create_table "positions", id: false, force: :cascade do |t|
+    t.string   "name",          limit: 255,                          null: false
+    t.decimal  "average_price",             precision: 20, scale: 2, null: false
+    t.integer  "quantity",                                           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "lock_version",                                       null: false
+    t.string   "strategy",      limit: 255
+  end
+
+  add_index "positions", ["name"], name: "index_positions_on_name", unique: true, using: :btree
+
   create_table "transactions", force: :cascade do |t|
     t.string   "name",         limit: 255,                          null: false
     t.integer  "quantity",                                          null: false
@@ -38,6 +50,7 @@ ActiveRecord::Schema.define(version: 20150610221529) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                      null: false
+    t.string   "strategy",     limit: 255
   end
 
 end
