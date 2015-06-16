@@ -218,7 +218,6 @@ class Etf
   end
 
   # Chapter 4B
-  #TODO fix date issue
   def b200_r_3?
     today = Date.today
 
