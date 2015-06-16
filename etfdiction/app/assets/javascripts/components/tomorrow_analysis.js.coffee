@@ -30,7 +30,7 @@
         React.DOM.div
           className: 'panel-body'
           React.DOM.table
-            className: 'table table-condensed table-striped'
+            className: 'table table-condensed table-bordered table-center-aligned'
             React.DOM.thead null,
               React.DOM.tr null,
                 React.DOM.th null, 'N'
@@ -53,7 +53,7 @@
         React.DOM.div
           className: 'panel-body'
           React.DOM.table
-            className: 'table table-condensed table-striped'
+            className: 'table table-condensed table-bordered table-center-aligned'
             React.DOM.thead null,
               React.DOM.tr null,
                 React.DOM.th null, 'N'

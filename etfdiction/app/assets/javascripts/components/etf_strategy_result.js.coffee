@@ -10,8 +10,17 @@
   componentDidMount: ->
     @getStrategeisResult()
 
+  getStrategyResultClass: (result) ->
+    if result == 1
+      "success"
+    else
+      "default"
+
   render: ->
     React.DOM.tr null,
       React.DOM.td key: @props.etf_name, @props.etf_name
       for strategyResult in @state.strategiesResult
-        React.DOM.td key: strategyResult.strategy_name, strategyResult.result
+        React.DOM.td
+          key: strategyResult.strategy_name,
+          className: @getStrategyResultClass(strategyResult.result)
+          strategyResult.result

@@ -13,20 +13,24 @@ class Etf
 
   # Display name and method name should be unique
   A200_ETF_STRATEGIES = [
-    {method_name: :a200_day_3_high_low?, strategy_name: 'D3HLA'},
-    {method_name: :a200_rsi_25?, strategy_name: 'RSI25A'},
-    {method_name: :a200_r_3?, strategy_name: 'R3A'},
-    {method_name: :a200_bb?, strategy_name: 'BBA'},
-    {method_name: :a200_multiple_day_up_down?, strategy_name: 'MDA'}
+    {method_name: :a200_day_3_high_low?, strategy_name: 'DHL'},
+    {method_name: :a200_rsi_25?, strategy_name: 'R25'},
+    {method_name: :a200_r_3?, strategy_name: 'RS3'},
+    {method_name: :a200_bb?, strategy_name: 'BB%'},
+    {method_name: :a200_multiple_day_up_down?, strategy_name: 'MUD'},
+    {method_name: :a200_rsi_10_6?, strategy_name: 'R10'},
+    {method_name: :a200_rsi_25_2?, strategy_name: 'TPS'}
   ]
 
   # Display name and method name should be unique
   B200_ETF_STRATEGIES = [
-    {method_name: :b200_day_3_high_low?, strategy_name: 'D3HLB'},
-    {method_name: :b200_rsi_25?, strategy_name: 'RSI25B'},
-    {method_name: :b200_r_3?, strategy_name: 'R3B'},
-    {method_name: :b200_bb?, strategy_name: 'BBB'},
-    {method_name: :b200_multiple_day_up_down?, strategy_name: 'MDB'},
+    {method_name: :b200_day_3_high_low?, strategy_name: 'DHL'},
+    {method_name: :b200_rsi_25?, strategy_name: 'R25'},
+    {method_name: :b200_r_3?, strategy_name: 'RS3'},
+    {method_name: :b200_bb?, strategy_name: 'BB%'},
+    {method_name: :b200_multiple_day_up_down?, strategy_name: 'MUD'},
+    {method_name: :b200_rsi_10_6?, strategy_name: 'R10'},
+    {method_name: :b200_rsi_25_2?, strategy_name: 'TPS'}
   ]
 
   attr_accessor :name
@@ -61,6 +65,50 @@ class Etf
   end
 
   memoize :realtime_from_yahoo
+
+  # Chapter 8A
+  def a200_rsi_25_2?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(3).pluck(:close)
+    past_rsi = compute_rsi(records_close)
+
+    return false if past_rsi > 25
+    if market_opened?
+      return true if current_rsi(2) <= 25
+    else
+      return true
+    end
+
+    false
+  end
+
+  # Chapter 8B
+  def b200_rsi_25_2?
+    records_close = EtfPrice.where(name: name).where("date <= '#{Date.today}'").order(date: :desc).limit(3).pluck(:close)
+    past_rsi = compute_rsi(records_close)
+
+    return false if past_rsi < 75
+    if market_opened?
+      return true if current_rsi(2) >= 75
+    else
+      return true
+    end
+
+    false
+  end
+
+  # Chapter 7A
+  def a200_rsi_10_6?
+    return true if current_rsi(2) <= 10
+
+    false
+  end
+
+  # Chapter 7B
+  def b200_rsi_10_6?
+    return true if current_rsi(2) >= 90
+
+    false
+  end
 
   # Chapter 6A
   # TODO: Add 5 day sma condition too
