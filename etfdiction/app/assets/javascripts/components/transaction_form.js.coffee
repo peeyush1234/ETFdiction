@@ -21,7 +21,6 @@
     name: ''
     price: ''
     quantity: ''
-    DHL: ''
 
   render: ->
     React.DOM.form
@@ -67,6 +66,54 @@
           value: @state.DHL
           onChange: @handleCheckboxChange
           "DHL"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "R25"
+          value: @state.R25
+          onChange: @handleCheckboxChange
+          "R25"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "RS3"
+          value: @state.RS3
+          onChange: @handleCheckboxChange
+          "RS3"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "BBP"
+          value: @state.BBP
+          onChange: @handleCheckboxChange
+          "BBP"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "MUD"
+          value: @state.MUD
+          onChange: @handleCheckboxChange
+          "MUD"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "R10"
+          value: @state.R10
+          onChange: @handleCheckboxChange
+          "R10"
+      React.DOM.div
+        className: "checkbox"
+        React.DOM.input
+          type: "checkbox"
+          name: "TPS"
+          value: @state.TPS
+          onChange: @handleCheckboxChange
+          "TPS"
       React.DOM.button
         type: 'submit'
         className: 'btn btn-primary btn-sm'

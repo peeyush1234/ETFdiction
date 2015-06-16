@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
       end
     end
 
-    transaction = Transaction.new(name: t_params[:name], price: t_params[:price], quantity: t_params[:quantity])
+    transaction = Transaction.new(name: t_params[:name], price: t_params[:price], quantity: t_params[:quantity], strategy: strategies_to_include.join(','))
 
     transaction.save!
 

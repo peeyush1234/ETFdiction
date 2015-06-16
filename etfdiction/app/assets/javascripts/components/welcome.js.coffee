@@ -12,7 +12,6 @@
 
   getLatestDatabaseDate: ->
     $.get '/etfs',{request: 'latest_database_date'}, (data) =>
-      console.log ("------#{data}")
       @setState latestDatabaseDate: data
     , 'JSON'
 
@@ -73,9 +72,9 @@
             React.DOM.thead null,
               React.DOM.tr null,
                 React.DOM.th null, 'N'
-                React.DOM.th null, 'AP'
+                React.DOM.th null, 'A'
                 React.DOM.th null, 'Q'
-                React.DOM.th null, 'CP'
+                React.DOM.th null, 'C'
                 React.DOM.th null, 'S'
             React.DOM.tbody null,
               for position in @state.openPositions
@@ -105,12 +104,12 @@
             className: 'past-transactions table table-condensed table-striped'
             React.DOM.thead null,
               React.DOM.tr null,
-                React.DOM.th null, 'Date'
-                React.DOM.th null, 'Name'
-                React.DOM.th null, 'Price'
-                React.DOM.th null, 'Quantity'
-                React.DOM.th null, 'Strategy'
-                React.DOM.th null, 'Actions'
+                React.DOM.th null, 'D'
+                React.DOM.th null, 'N'
+                React.DOM.th null, 'P'
+                React.DOM.th null, 'Q'
+                React.DOM.th null, 'S'
+                React.DOM.th null, 'A'
             React.DOM.tbody null,
               for transaction in @state.transactions
                 React.createElement Transaction, key: transaction.id, transaction: transaction, handleDeleteTransaction: @deleteTransaction

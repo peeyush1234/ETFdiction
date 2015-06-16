@@ -15,7 +15,7 @@
       React.DOM.td null, @props.transaction.name
       React.DOM.td null, @props.transaction.price
       React.DOM.td null, @props.transaction.quantity
-      React.DOM.td null, "TADA"
+      React.DOM.td null, @props.transaction.strategy
       React.DOM.td null,
         React.DOM.a
           className: 'btn btn-danger btn-sm'

@@ -8,6 +8,8 @@ class EtfsController < ApplicationController
             price_above_sma_200: Etf.new(etf_name).price_above_sma?(200) ? 1 : 0
           }
         end
+      when 'etf_strategies'
+        Etf::STRATEGIES_LIST.map(&:to_f)
       when 'a200_etf_strategies'
         Etf::A200_ETF_STRATEGIES.map{|i| i[:strategy_name]}
       when 'b200_etf_strategies'
@@ -18,8 +20,6 @@ class EtfsController < ApplicationController
       else
         raise 'Invalid request for Etfs index action'
     end
-
-    Rails.logger.info "---------#{response}" if params[:request] == 'latest_database_date'
 
     render json: response
   end

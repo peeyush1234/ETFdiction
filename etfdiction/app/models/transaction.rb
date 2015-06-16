@@ -20,6 +20,7 @@ class Transaction < ActiveRecord::Base
       total_quantity = position.quantity + self.quantity
       total_amount = existing_amount + new_amount
       position.average_price = total_quantity == 0 ? 0 : (total_amount/total_quantity).round(2)
+      position.strategy = total_quantity == 0 ? nil : position.strategy.to_s.split(",").concat(self.strategy.to_s.split(',')).uniq.join(',')
       position.quantity = total_quantity
       position.save!
     else
@@ -35,6 +36,7 @@ class Transaction < ActiveRecord::Base
     fixed_quantity = position.quantity - self.quantity
     position.quantity = fixed_quantity
     position.average_price = fixed_quantity == 0 ? 0 : (fixed_amount/fixed_quantity).round(2)
+    position.strategy = nil if fixed_quantity == 0
     position.save!
   end
 end
