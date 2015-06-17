@@ -56,7 +56,7 @@
                           React.DOM.div
                             className: "model-body"
                             for ele in strategy.description
-                              React.DOM.p null, ele
+                              React.DOM.p key: ele, ele
             React.DOM.tbody null,
               for etf in @props.etfs
                 if etf.price_above_sma_200 == 1
@@ -100,7 +100,7 @@
                           React.DOM.div
                             className: "model-body"
                             for ele in strategy.description
-                              React.DOM.p null, ele
+                              React.DOM.p key: ele, ele
             React.DOM.tbody null,
               for etf in @props.etfs
                 if etf.price_above_sma_200 == 0

@@ -30,6 +30,8 @@ class EtfsController < ApplicationController
         Etf.new(params[:name]).a200_strategies_result
       when 'b200_strategies_result'
         Etf.new(params[:name]).b200_strategies_result
+      when 'technicals'
+        [{name: :rsi, value: 30}, {name: :sma, value: 10}]
       else
         raise 'Invalid request for Etfs show action'
     end

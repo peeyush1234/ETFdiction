@@ -16,32 +16,46 @@ class Etf
   # Display name and method name should be unique
   A200_ETF_STRATEGIES = [
     {method_name: :a200_day_3_high_low?, strategy_name: :DHL, description: [
-      "1. Today ETF closes below 5 SMA",
-      "2. Two days ago the high and low is below the previous day's",
-      "3. Yesterday the high and low is below the previous day's",
-      "4. Buy on the close",
-      "5. AV: Buy more of goes down",
-      "6. Exit on the close when price above 5 SMA"
+      "1. Today ETF closes below 5 SMA.",
+      "2. Two days ago the high and low is below the previous day's.",
+      "3. Yesterday the high and low is below the previous day's.",
+      "4. Buy on the close.",
+      "5. AV: Buy more of goes down.",
+      "6. Exit on the close when price above 5 SMA."
     ]},
     {method_name: :a200_rsi_25?, strategy_name: :R25, description: [
-      "1. RSI(4) closes under 25. Buy on close",
-      "2. AV: Buy more if RSI(4) goes below 20",
-      "3. Exit when RSI(4) above 55"
+      "1. RSI(4) closes under 25. Buy on close.",
+      "2. AV: Buy more if RSI(4) goes below 20.",
+      "3. Exit when RSI(4) above 55."
     ]},
     {method_name: :a200_r_3?, strategy_name: :RS3, description: [
-      "Testing"
+      "1. RSI(2) drops 3 days in a row. The first day's drop is below 60.",
+      "2. RSI(2) closes under 10 today. Buy on close.",
+      "3. AV: Buy more if price lower then entry.",
+      "4. Exit when RSI(2) above 70."
     ]},
     {method_name: :a200_bb?, strategy_name: :BBP, description: [
-      "Testing"
+      "1. %b is under 0.2 for 3 days in a row. Buy on third day close.",
+      "2. AV: Buy more if %b close below 0.2 again.",
+      "3. Exist when %b above 0.8."
     ]},
     {method_name: :a200_multiple_day_up_down?, strategy_name: :MUD, description: [
-      "Testing"
+      "1. ETF closes below 5 SMA on entry day",
+      "2. Must drop 4 out of 5 days. If happens buy on the close.",
+      "3. AV: Buy more if price lower then entry.",
+      "4. Exit when cose above 5 SMA."
     ]},
     {method_name: :a200_rsi_10_6?, strategy_name: :R10, description: [
-      "Testing"
+      "1. Buy if RSI(2) goes under 10.",
+      "2. Buy more if RSI(2) under 6.",
+      "3. Exit when close amove 5 SMA."
     ]},
     {method_name: :a200_rsi_25_2?, strategy_name: :TPS, description: [
-      "Testing"
+      "1. RSI(2) below 25 for 2 days in row. Buy 10% at close.",
+      "2. If prices are lower than previous entry, buy 20% more.",
+      "3. If prices goes lower again, buy 30% more",
+      "4. If prices goes lower again, buy 40% more",
+      "5. Exit when RSI(2) above 70"
     ]}
   ]
 

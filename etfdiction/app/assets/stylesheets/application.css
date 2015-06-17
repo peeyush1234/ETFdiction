@@ -34,6 +34,10 @@
     padding: 0px;
 }
 
+.table tbody tr > td > a.btn {
+    padding: 0px;
+}
+
 .table tbody tr > td.success {
     background-color: #dff0d8 !important;
 }
