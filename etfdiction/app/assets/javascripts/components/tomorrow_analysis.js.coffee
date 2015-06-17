@@ -35,14 +35,14 @@
               React.DOM.tr null,
                 React.DOM.th null, 'N'
                 for strategy in @state.a200_etf_strategies
-                  React.DOM.th key: strategy,
+                  React.DOM.th key: strategy.name,
                     React.DOM.a
                       className: "modal-link btn btn-sm"
                       "data-toggle": "modal",
-                      "data-target": ".bs-example-modal-sm-#{strategy}"
-                      strategy
+                      "data-target": ".a-modal-sm-#{strategy.name}"
+                      strategy.name
                     React.DOM.div
-                      className: "modal fade active bs-example-modal-sm-#{strategy}"
+                      className: "modal fade a-modal-sm-#{strategy.name}"
                       tabIndex: "-1"
                       role: "dialog"
                       "aria-labelledby": "mySmallModalLabel"
@@ -50,7 +50,13 @@
                         className: "modal-dialog modal-sm"
                         React.DOM.div
                           className: "modal-content"
-                          "..."
+                          React.DOM.h4
+                            className: "modal-title"
+                            strategy.name
+                          React.DOM.div
+                            className: "model-body"
+                            for ele in strategy.description
+                              React.DOM.p null, ele
             React.DOM.tbody null,
               for etf in @props.etfs
                 if etf.price_above_sma_200 == 1
@@ -73,7 +79,28 @@
               React.DOM.tr null,
                 React.DOM.th null, 'N'
                 for strategy in @state.b200_etf_strategies
-                  React.DOM.th key: strategy, strategy
+                  React.DOM.th key: strategy.name,
+                    React.DOM.a
+                      className: "modal-link btn btn-sm"
+                      "data-toggle": "modal",
+                      "data-target": ".b-modal-sm-#{strategy.name}"
+                      strategy.name
+                    React.DOM.div
+                      className: "modal fade b-modal-sm-#{strategy.name}"
+                      tabIndex: "-1"
+                      role: "dialog"
+                      "aria-labelledby": "mySmallModalLabel"
+                      React.DOM.div
+                        className: "modal-dialog modal-sm"
+                        React.DOM.div
+                          className: "modal-content"
+                          React.DOM.h4
+                            className: "modal-title"
+                            strategy.name
+                          React.DOM.div
+                            className: "model-body"
+                            for ele in strategy.description
+                              React.DOM.p null, ele
             React.DOM.tbody null,
               for etf in @props.etfs
                 if etf.price_above_sma_200 == 0

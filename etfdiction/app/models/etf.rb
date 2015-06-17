@@ -15,24 +15,59 @@ class Etf
 
   # Display name and method name should be unique
   A200_ETF_STRATEGIES = [
-    {method_name: :a200_day_3_high_low?, strategy_name: :DHL},
-    {method_name: :a200_rsi_25?, strategy_name: :R25},
-    {method_name: :a200_r_3?, strategy_name: :RS3},
-    {method_name: :a200_bb?, strategy_name: :BBP},
-    {method_name: :a200_multiple_day_up_down?, strategy_name: :MUD},
-    {method_name: :a200_rsi_10_6?, strategy_name: :R10},
-    {method_name: :a200_rsi_25_2?, strategy_name: :TPS}
+    {method_name: :a200_day_3_high_low?, strategy_name: :DHL, description: [
+      "1. Today ETF closes below 5 SMA",
+      "2. Two days ago the high and low is below the previous day's",
+      "3. Yesterday the high and low is below the previous day's",
+      "4. Buy on the close",
+      "5. AV: Buy more of goes down",
+      "6. Exit on the close when price above 5 SMA"
+    ]},
+    {method_name: :a200_rsi_25?, strategy_name: :R25, description: [
+      "1. RSI(4) closes under 25. Buy on close",
+      "2. AV: Buy more if RSI(4) goes below 20",
+      "3. Exit when RSI(4) above 55"
+    ]},
+    {method_name: :a200_r_3?, strategy_name: :RS3, description: [
+      "Testing"
+    ]},
+    {method_name: :a200_bb?, strategy_name: :BBP, description: [
+      "Testing"
+    ]},
+    {method_name: :a200_multiple_day_up_down?, strategy_name: :MUD, description: [
+      "Testing"
+    ]},
+    {method_name: :a200_rsi_10_6?, strategy_name: :R10, description: [
+      "Testing"
+    ]},
+    {method_name: :a200_rsi_25_2?, strategy_name: :TPS, description: [
+      "Testing"
+    ]}
   ]
 
   # Display name and method name should be unique
   B200_ETF_STRATEGIES = [
-    {method_name: :b200_day_3_high_low?, strategy_name: :DHL},
-    {method_name: :b200_rsi_25?, strategy_name: :R25},
-    {method_name: :b200_r_3?, strategy_name: :RS3},
-    {method_name: :b200_bb?, strategy_name: :BBP},
-    {method_name: :b200_multiple_day_up_down?, strategy_name: :MUD},
-    {method_name: :b200_rsi_10_6?, strategy_name: :R10},
-    {method_name: :b200_rsi_25_2?, strategy_name: :TPS}
+    {method_name: :b200_day_3_high_low?, strategy_name: :DHL, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_rsi_25?, strategy_name: :R25, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_r_3?, strategy_name: :RS3, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_bb?, strategy_name: :BBP, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_multiple_day_up_down?, strategy_name: :MUD, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_rsi_10_6?, strategy_name: :R10, description: [
+      "Testing"
+    ]},
+    {method_name: :b200_rsi_25_2?, strategy_name: :TPS, description: [
+      "Testing"
+    ]}
   ]
 
   attr_accessor :name

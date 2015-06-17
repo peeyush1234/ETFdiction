@@ -8,12 +8,10 @@ class EtfsController < ApplicationController
             price_above_sma_200: Etf.new(etf_name).price_above_sma?(200) ? 1 : 0
           }
         end
-      when 'etf_strategies'
-        Etf::STRATEGIES_LIST.map(&:to_f)
       when 'a200_etf_strategies'
-        Etf::A200_ETF_STRATEGIES.map{|i| i[:strategy_name]}
+        Etf::A200_ETF_STRATEGIES.map{|i| {name: i[:strategy_name], description: i[:description]}}
       when 'b200_etf_strategies'
-        Etf::B200_ETF_STRATEGIES.map{|i| i[:strategy_name]}
+        Etf::B200_ETF_STRATEGIES.map{|i| {name: i[:strategy_name], description: i[:description]}}
       when 'latest_database_date'
         result = EtfPrice.order(date: :desc).limit(1).first.date
         {data: result}
