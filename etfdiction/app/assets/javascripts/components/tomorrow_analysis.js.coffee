@@ -35,7 +35,22 @@
               React.DOM.tr null,
                 React.DOM.th null, 'N'
                 for strategy in @state.a200_etf_strategies
-                  React.DOM.th key: strategy, strategy
+                  React.DOM.th key: strategy,
+                    React.DOM.a
+                      className: "modal-link btn btn-sm"
+                      "data-toggle": "modal",
+                      "data-target": ".bs-example-modal-sm-#{strategy}"
+                      strategy
+                    React.DOM.div
+                      className: "modal fade active bs-example-modal-sm-#{strategy}"
+                      tabIndex: "-1"
+                      role: "dialog"
+                      "aria-labelledby": "mySmallModalLabel"
+                      React.DOM.div
+                        className: "modal-dialog modal-sm"
+                        React.DOM.div
+                          className: "modal-content"
+                          "..."
             React.DOM.tbody null,
               for etf in @props.etfs
                 if etf.price_above_sma_200 == 1
