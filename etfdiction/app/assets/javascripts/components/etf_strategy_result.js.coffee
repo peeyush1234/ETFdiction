@@ -15,6 +15,7 @@
 
   componentDidMount: ->
     @getStrategiesResult()
+    setInterval @getStrategiesResult, 60000
     @getEtfTechnicals()
     setInterval @getEtfTechnicals, 60000
 
