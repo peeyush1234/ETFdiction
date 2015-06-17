@@ -16,6 +16,7 @@
   componentDidMount: ->
     @getStrategiesResult()
     @getEtfTechnicals()
+    setInterval @getEtfTechnicals, 60000
 
   getStrategyResultClass: (result) ->
     if result == 1

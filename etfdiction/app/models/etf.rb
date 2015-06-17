@@ -90,6 +90,16 @@ class Etf
     self.name = name
   end
 
+  # TODO: Add current_bb
+  def technicals
+    [
+      {name: :price, value: realtime_from_yahoo[:current]},
+      {name: :sma_5, value: current_sma(5)},
+      {name: :rsi_4, value: current_rsi(4)},
+      {name: :rsi_2, value: current_rsi(2)},
+    ]
+  end
+
   def a200_strategies_result
     A200_ETF_STRATEGIES.map do |i|
       {strategy_name: i[:strategy_name], result: self.send(i[:method_name]) ? 1 : 0}
