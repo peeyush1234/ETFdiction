@@ -25,4 +25,5 @@
       React.DOM.td
         className: @getPriceClass(),
         @state.current_price
-      React.DOM.td null, @props.position.strategy
+      React.DOM.td null, percentChange(@state.current_price, @props.position.average_price)
+      React.DOM.td null, absoluteChange(@state.current_price, @props.position.average_price, @props.position.quantity)

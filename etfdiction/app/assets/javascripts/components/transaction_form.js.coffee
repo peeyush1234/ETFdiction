@@ -8,7 +8,7 @@
     @setState "#{name}": e.target.checked
 
   valid: ->
-    @state.name && @state.price && @state.quantity
+    @state.name && @state.price && @state.quantity && @state.baseName
 
   handleSubmit: (e) ->
     e.preventDefault()
@@ -21,6 +21,7 @@
     name: ''
     price: ''
     quantity: ''
+    baseName: ''
 
   render: ->
     React.DOM.form
@@ -34,6 +35,15 @@
           placeholder: 'Name'
           name: 'name'
           value: @state.name
+          onChange: @handleChange
+      React.DOM.div
+        className: 'form-group'
+        React.DOM.input
+          type: 'text'
+          className: 'form-control input-sm'
+          placeholder: 'BaseName'
+          name: 'baseName'
+          value: @state.baseName
           onChange: @handleChange
       React.DOM.div
         className: 'form-group'

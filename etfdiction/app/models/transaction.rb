@@ -2,6 +2,7 @@ class Transaction < ActiveRecord::Base
   validates :name, presence: true
   validates :quantity, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :base_etf, presence: true
 
   before_save :capitalize_name
   after_create :update_position
@@ -24,7 +25,7 @@ class Transaction < ActiveRecord::Base
       position.quantity = total_quantity
       position.save!
     else
-      Position.create!(name: self.name, quantity: self.quantity, average_price: self.price)
+      Position.create!(name: self.name, quantity: self.quantity, average_price: self.price, base_etf: self.base_etf)
     end
   end
 

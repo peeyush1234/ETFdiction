@@ -121,6 +121,10 @@ class Etf
     ]
   end
 
+  def position_technicals
+    {sma_5: current_sma(5), rsi_4: current_rsi(4), rsi_2: current_rsi(2)}
+  end
+
   def a200_strategies_result
     A200_ETF_STRATEGIES.map do |i|
       {strategy_name: i[:strategy_name], result: self.send(i[:method_name]) ? 1 : 0}

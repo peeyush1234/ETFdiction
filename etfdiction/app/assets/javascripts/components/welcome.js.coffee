@@ -72,13 +72,27 @@
             React.DOM.thead null,
               React.DOM.tr null,
                 React.DOM.th null, 'N'
-                React.DOM.th null, 'A'
+                React.DOM.th null, 'AP'
                 React.DOM.th null, 'Q'
                 React.DOM.th null, 'C'
-                React.DOM.th null, 'S'
+                React.DOM.th null, '%G'
+                React.DOM.th null, 'AG'
             React.DOM.tbody null,
               for position in @state.openPositions
                 React.createElement Position, key: position.name, position: position, pollInterval: 60000
+          "Technicals"
+          React.DOM.table
+            className: 'table table-condensed table-striped'
+            React.DOM.thead null,
+              React.DOM.tr null,
+                React.DOM.th null, 'N'
+                React.DOM.th null, 'S_5'
+                React.DOM.th null, 'R_4'
+                React.DOM.th null, 'R_2'
+                React.DOM.th null, 'S'
+            React.DOM.tbody null,
+              for position in @state.openPositions
+                React.createElement PositionTechnical, key: position.name, position: position, pollInterval: 60000
 
       # -- Update database --
       React.DOM.div
