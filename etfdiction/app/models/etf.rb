@@ -42,13 +42,13 @@ class Etf
     {method_name: :a200_multiple_day_up_down?, strategy_name: :MUD, description: [
       "1. ETF closes below 5 SMA on entry day",
       "2. Must drop 4 out of 5 days. If happens buy on the close.",
-      "3. AV: Buy more if price lower then entry.",
-      "4. Exit when cose above 5 SMA."
+      "3. AV: Buy more if price lower than entry.",
+      "4. Exit when close above 5 SMA."
     ]},
     {method_name: :a200_rsi_10_6?, strategy_name: :R10, description: [
       "1. Buy if RSI(2) goes under 10.",
       "2. Buy more if RSI(2) under 6.",
-      "3. Exit when close amove 5 SMA."
+      "3. Exit when close above 5 SMA."
     ]},
     {method_name: :a200_rsi_25_2?, strategy_name: :TPS, description: [
       "1. RSI(2) below 25 for 2 days in row. Buy 10% at close.",
@@ -62,25 +62,46 @@ class Etf
   # Display name and method name should be unique
   B200_ETF_STRATEGIES = [
     {method_name: :b200_day_3_high_low?, strategy_name: :DHL, description: [
-      "Testing"
+      "1. Today ETF closes above 5 SMA.",
+      "2. Two days ago the high and low is above the previous day's.",
+      "3. Yesterday the high and low is above the previous day's.",
+      "4. Sell short on the close.",
+      "5. AV: Sell short more of goes down.",
+      "6. Exit on the close when price below 5 SMA."
     ]},
     {method_name: :b200_rsi_25?, strategy_name: :R25, description: [
-      "Testing"
+      "1. RSI(4) closes above 75. Sell short on close.",
+      "2. AV: Sell short more if RSI(4) goes below 80.",
+      "3. Exit when RSI(4) under 45."
     ]},
     {method_name: :b200_r_3?, strategy_name: :RS3, description: [
-      "Testing"
+      "1. RSI(2) rises 3 days in a row. The first day's rise is from above 40.",
+      "2. RSI(2) closes above 90 today. Sell short on close.",
+      "3. AV: Sell short more if price goes above than entry.",
+      "4. Exit when RSI(2) below 30."
     ]},
     {method_name: :b200_bb?, strategy_name: :BBP, description: [
-      "Testing"
+      "1. %b is above 0.8 for 3 days in a row. Sell short on third day close.",
+      "2. AV: Short more if %b closes above 0.8 again.",
+      "3. Exist when %b under 0.2."
     ]},
     {method_name: :b200_multiple_day_up_down?, strategy_name: :MUD, description: [
-      "Testing"
+      "1. ETF closes above 5 SMA on entry day",
+      "2. Close must be higher 4 out of 5 days. If happens short on the close.",
+      "3. AV: Short more if price lower than entry.",
+      "4. Exit when close below 5 SMA."
     ]},
     {method_name: :b200_rsi_10_6?, strategy_name: :R10, description: [
-      "Testing"
+      "1. Short if RSI(2) goes above 90.",
+      "2. Short more if RSI(2) under 94.",
+      "3. Exit when close under 5 SMA."
     ]},
     {method_name: :b200_rsi_25_2?, strategy_name: :TPS, description: [
-      "Testing"
+      "1. RSI(2) above 75 for 2 days in row. Short 10% at close.",
+      "2. If prices are higher than previous entry, short 20% more.",
+      "3. If prices goes higher again, short 30% more",
+      "4. If prices goes higher again, short 40% more",
+      "5. Exit when RSI(2) below 30"
     ]}
   ]
 
